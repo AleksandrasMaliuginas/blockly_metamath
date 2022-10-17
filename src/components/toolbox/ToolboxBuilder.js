@@ -12,7 +12,6 @@ export default class ToolboxBuilder {
 
   build() {
     for (const token of this.tokens) {
-      // console.log(token)
       token.createBlocks(this.workspace);
     }
 
