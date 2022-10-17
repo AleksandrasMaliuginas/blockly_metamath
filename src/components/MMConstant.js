@@ -13,13 +13,11 @@ export class MMConstant extends MMToken {
     for (const constName of this.params) {
       workspace.createVariable(constName, 'constant');
     }
-    const vars = workspace.getAllVariables();
-    console.log(vars);
 
-    workspace.registerToolboxCategoryCallback('MM_CONSTANTS', this._coloursFlyoutCallback);
+    workspace.registerToolboxCategoryCallback('MM_CONSTANTS', this._toolboxFlyoutCallback);
   }
 
-  _coloursFlyoutCallback(workspace) {
+  _toolboxFlyoutCallback(workspace) {
     const blockList = [];
     const constants = workspace.getVariablesOfType('constant');
     for (const constant of constants) {
@@ -33,5 +31,5 @@ export class MMConstant extends MMToken {
     }
 
     return blockList;
-  };
+  }
 }
