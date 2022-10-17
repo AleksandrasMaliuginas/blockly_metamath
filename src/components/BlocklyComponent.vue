@@ -15,6 +15,7 @@ import Blockly from "blockly";
 
 import { Parser } from './Parser.js'
 import ToolboxBuilder from "./toolbox/ToolboxBuilder";
+import MetamathSet from "./MetamathSet";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -37,6 +38,7 @@ onMounted(async () => {
   }
   workspace.value = Blockly.inject(blocklyDiv.value, options);
   
+  MetamathSet.setTokens(parser.getParsedTokens());
   
   
   const toolboxBuilder = new ToolboxBuilder(workspace.value, parser.getParsedTokens());
