@@ -17,3 +17,10 @@ export class MMBlock extends MMToken {
     return end;
   }
 }
+
+export const MM = {
+  Constant: 'MMConstant',
+  Variable: 'MMVariable',
+  FloatingHypo: 'MMFloatingHypo',
+  Axiom: 'MMAxiom',
+}

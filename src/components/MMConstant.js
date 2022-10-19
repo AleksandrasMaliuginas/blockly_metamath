@@ -1,3 +1,4 @@
+import { MM } from "./MMBlock";
 import { MMToken } from "./MMToken";
 
 
@@ -11,7 +12,7 @@ export class MMConstant extends MMToken {
 
   createBlocks(workspace) {
     for (const constName of this.params) {
-      workspace.createVariable(constName, 'constant');
+      workspace.createVariable(constName, MM.Constant);
     }
 
     workspace.registerToolboxCategoryCallback('MM_CONSTANTS', this._toolboxFlyoutCallback);
@@ -19,13 +20,13 @@ export class MMConstant extends MMToken {
 
   _toolboxFlyoutCallback(workspace) {
     const blockList = [];
-    const constants = workspace.getVariablesOfType('constant');
+    const constants = workspace.getVariablesOfType(MM.Constant);
     for (const constant of constants) {
       blockList.push({
         'kind': 'block',
-        'type': 'mm_constant',
+        'type': MM.Constant,
         'fields': {
-          'VAR': constant
+          'CONST': constant
         }
       });
     }
