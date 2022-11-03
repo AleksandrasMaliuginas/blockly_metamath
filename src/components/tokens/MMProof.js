@@ -32,4 +32,8 @@ export class MMProof extends MMToken {
       }
     });
   }
+
+  static _toolboxFlyoutCallback(workspace) {
+    
+  }
 }
