@@ -1,4 +1,4 @@
-import { MM } from "../MMBlock";
+import { MM } from "../MMToken";
 
 export const blocks = [
   {
@@ -6,11 +6,9 @@ export const blocks = [
     "message0": '%1 %2',
     "args0": [
       {
-        "type": "field_variable",
+        "type": "field_label_serializable",
         "name": "CONST",
-        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}",
-        "variableTypes": [MM.Constant], // Specifies what types to put in the dropdown
-        "defaultType": MM.Constant
+        "text": "NO_LABEL"
       },
       {
         "type": "input_value",
@@ -18,11 +16,9 @@ export const blocks = [
         "check": [MM.Constant, MM.Variable]
       }
     ],
+    "inputsInline": false,
     "output": MM.Constant,
-    "colour": 160,
-    "cssConfig": {
-      "container": "AAAAAAAAAAAAAAAAAAAAAAAAAA"
-    }
+    "colour": 160
   },
 
   {
@@ -30,11 +26,9 @@ export const blocks = [
     "message0": '%1 %2',
     "args0": [
       {
-        "type": "field_variable",
+        "type": "field_label_serializable",
         "name": "VAR",
-        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}",
-        "variableTypes": [MM.Variable],
-        "defaultType": MM.Variable
+        "text": "NO_LABEL"
       },
       {
         "type": "input_value",
@@ -50,18 +44,14 @@ export const blocks = [
     "message0": '%1 %2',
     "args0": [
       {
-        "type": "field_variable",
+        "type": "field_label_serializable",
         "name": "CONST",
-        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}",
-        "variableTypes": [MM.Constant],
-        "defaultType": MM.Constant
+        "text": "NO_LABEL"
       },
       {
-        "type": "field_variable",
+        "type": "field_label_serializable",
         "name": "VAR",
-        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}",
-        "variableTypes": [MM.Variable],
-        "defaultType": MM.Variable
+        "text": "NO_LABEL"
       },
     ],
     "output": MM.FloatingHypo,
@@ -78,8 +68,48 @@ export const blocks = [
       }
     ],
     "inputsInline": true,
+    "previousStatement": null,
+    "nextStatement": null,
     "output": MM.Axiom,
     "colour": 210,
+  },
+  {
+    "type": MM.EssentialHypo,
+    "message0": '%1',
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "DEF",
+        "check": [MM.Constant] // Starts with constant
+      }
+    ],
+    "inputsInline": true,
+    "previousStatement": null,
+    "nextStatement": null,
+    "output": MM.EssentialHypo,
+    "colour": 20,
+  },
+  {
+    "type": MM.Block,
+    "message0": 'b_axiom %1',
+    "args0": [
+      {
+        "type": "input_statement",
+        "name": "DEF"
+      }
+    ],
+    "colour": 230,
+  },
+  {
+    "type": MM.Proof,
+    "message0": 'Proof %1',
+    "args0": [
+      {
+        "type": "input_statement",
+        "name": "DEF"
+      }
+    ],
+    "colour": 20,
   },
   
 ]
@@ -110,6 +140,18 @@ export const toolbox = {
       "name": "Axioms",
       "colour": 210,
       "custom": "MM_AXIOMS"
+    },
+    {
+      "kind": "category",
+      "name": "Blocks",
+      "colour": 60,
+      "custom": "MM_BLOCKS"
+    },
+    {
+      "kind": "category",
+      "name": "Proofs",
+      "colour": 20,
+      "custom": "MM_PROOFS"
     },
   ],
 };

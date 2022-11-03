@@ -9,7 +9,6 @@ Norman Megill - email: nm at alum.mit.edu
 
 $)$( Hello world $)
 
-
 $( This file is the introductory formal system example described
    in Chapter 2 of the Meamath book. $)
 
@@ -36,11 +35,13 @@ $( State axiom a1 $)
     a1 $a |- ( t = r -> ( t = s -> r = s ) ) $.
 $( State axiom a2 $)
     a2 $a |- ( t + 0 ) = t $.
+    
+    $( a and p are global hypothesies $)
     ${
        min $e |- P $.
        maj $e |- ( P -> Q ) $.
 $( Define the modus ponens inference rule $)
-       mp  $a |- Q $.
+       mp $a |- Q $.
     $}
 $( Prove a theorem $)
     th1 $p |- t = t $=

@@ -1,4 +1,4 @@
-import { MMToken } from "./MMToken";
+import { MMToken } from "../MMToken";
 
 
 export class MMComment extends MMToken {
