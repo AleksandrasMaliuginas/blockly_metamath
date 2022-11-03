@@ -1,4 +1,4 @@
-import { MMComponentBuilder } from './MMComponentBuilder'
+import { ComponentBuilder } from './ComponentBuilder'
 
 export class Parser {
   constructor(fileString) {
@@ -8,16 +8,14 @@ export class Parser {
   }
 
   parse(idx = 0) {
-    // if (idx >= this.fileStr.length) return;
     if (this._isWhiteSpace(this.fileStr[idx])) {
       return this.parse(idx + 1);
     }
 
     const dolerIdx = this.fileStr.indexOf('$', idx);
     const token = this.fileStr[dolerIdx + 1];
-    // console.log({ idx, token });
 
-    const mmComponent = MMComponentBuilder.build(token);
+    const mmComponent = ComponentBuilder.build(token);
     if (!mmComponent ) {
       return [idx, this.tokens];
     }

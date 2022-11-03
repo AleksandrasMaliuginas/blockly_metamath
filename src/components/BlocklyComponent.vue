@@ -14,8 +14,14 @@ import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
 
 import { Parser } from './Parser.js'
-import ToolboxBuilder from "./toolbox/ToolboxBuilder";
-import MetamathSet from "./MetamathSet";
+import SymbolsDB from "./SymbolsDB";
+import { MMConstant } from "./tokens/MMConstant";
+import { MMVariable } from "./tokens/MMVariable";
+import { MMFloatingHypo } from "./tokens/MMFloatingHypo";
+import { MMAxiom } from "./tokens/MMAxiom";
+import { blocks, toolbox } from "./toolbox/blockTemplates";
+import { MMBlock } from "./tokens/MMBlock";
+
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -38,14 +44,22 @@ onMounted(async () => {
   }
   workspace.value = Blockly.inject(blocklyDiv.value, options);
   
-  MetamathSet.setTokens(parser.getParsedTokens());
-  
-  
-  const toolboxBuilder = new ToolboxBuilder(workspace.value, parser.getParsedTokens());
-  const newToolbox = toolboxBuilder.build();
-  workspace.value.updateToolbox(newToolbox);
+  SymbolsDB.initSymbols(parser.getParsedTokens());
 
+  Blockly.defineBlocksWithJsonArray(blocks);
+  registerToolboxCategoryCallbacks();
+  
+  workspace.value.updateToolbox(toolbox);
 });
+
+function registerToolboxCategoryCallbacks() {
+  workspace.value.registerToolboxCategoryCallback('MM_CONSTANTS', MMConstant._toolboxFlyoutCallback);
+  workspace.value.registerToolboxCategoryCallback('MM_VARIABLES', MMVariable._toolboxFlyoutCallback);
+  workspace.value.registerToolboxCategoryCallback('MM_FLOATING_HYPOS', MMFloatingHypo._toolboxFlyoutCallback);
+  workspace.value.registerToolboxCategoryCallback('MM_AXIOMS', MMAxiom._toolboxFlyoutCallback);
+  
+  workspace.value.registerToolboxCategoryCallback('MM_BLOCKS', MMBlock._toolboxFlyoutCallback);
+}
 
 </script>
 

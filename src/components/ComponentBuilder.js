@@ -1,13 +1,13 @@
-import { MMAxiom } from "./MMAxiom";
-import { MMBlock } from "./MMBlock";
-import { MMComment } from "./MMComment";
-import { MMConstant } from "./MMConstant";
-import { MMEssentialHypo } from "./MMEssentialHypo";
-import { MMFloatingHypo } from "./MMFloatingHypo";
-import { MMProof } from "./MMProof";
-import { MMVariable } from "./MMVariable";
+import { MMAxiom } from "./tokens/MMAxiom";
+import { MMBlock } from "./tokens/MMBlock";
+import { MMComment } from "./tokens/MMComment";
+import { MMConstant } from "./tokens/MMConstant";
+import { MMEssentialHypo } from "./tokens/MMEssentialHypo";
+import { MMFloatingHypo } from "./tokens/MMFloatingHypo";
+import { MMProof } from "./tokens/MMProof";
+import { MMVariable } from "./tokens/MMVariable";
 
-export class MMComponentBuilder {
+export class ComponentBuilder {
   static build(componentType) {
 
     switch (componentType) {
