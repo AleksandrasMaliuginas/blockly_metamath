@@ -102,12 +102,17 @@ export const blocks = [
   },
   {
     "type": MM.Proof,
-    "message0": 'Proof %1',
+    "message0": 'Proof %1 %2',
     "args0": [
       {
+        "type": "field_label_serializable",
+        "name": "ASSERTION",
+        "text": "NO_LABEL"
+      },
+      {
         "type": "input_statement",
-        "name": "DEF"
-      }
+        "name": "PROOF"
+      },
     ],
     "colour": 20,
   },

@@ -1,4 +1,6 @@
+import { BlockSvg } from "blockly";
 import { MM, MMToken } from "../MMToken";
+import { MMConstant } from "./MMConstant";
 
 
 export class MMProof extends MMToken {
@@ -34,6 +36,13 @@ export class MMProof extends MMToken {
   }
 
   static _toolboxFlyoutCallback(workspace) {
+    // console.trace('Obaaa')
+    // const blocks = MMConstant._toolboxFlyoutCallback();
+    // const block = workspace.newBlock(blocks[0].type);
+    // block.initSvg();
+    // block.render();
+
+
     
   }
 }
