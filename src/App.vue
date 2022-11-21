@@ -73,7 +73,7 @@ const showCode = () => (code.value = BlocklyJS.workspaceToCode(foo.value.workspa
 
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
+    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
     <!-- <BlocklyComponent id="blockly1">
       <block type="controls_ifelse"></block>
       <block type="logic_compare"></block>
@@ -100,10 +100,12 @@ const showCode = () => (code.value = BlocklyJS.workspaceToCode(foo.value.workspa
     </BlocklyComponent> -->
 
     <BlocklyComponent id="blockly2" :options="options" ref="foo"></BlocklyComponent>
-    <!-- <p id="code">
+
+    <p id="code">
       <button v-on:click="showCode()">Show JavaScript</button>
       <pre v-html="code"></pre>
-    </p> -->
+    </p>
+    
   </div>
 </template>
 
@@ -123,26 +125,31 @@ body {
 #code {
   position: absolute;
   right: 0;
-  bottom: 0;
-  width: 50%;
-  height: 50%;
+  top: 0;
+  width: 20%;
+  height: 100%;
   margin: 0;
   background-color: beige;
 }
 
-#blockly1 {
+#code button {
+  display: block;
+  margin: 20px auto;
+}
+
+/* #blockly1 {
   position: absolute;
   right: 0;
-  top: 0;
+  bottom: 0;
   width: 50%;
   height: 50%;
-}
+} */
 
 #blockly2 {
   position: absolute;
   left: 0;
-  bottom: 0;
+  top: 0;
   width: 80%;
-  height: 80%;
+  height: 100%;
 }
 </style>
