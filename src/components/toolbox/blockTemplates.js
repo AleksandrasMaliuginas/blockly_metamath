@@ -1,6 +1,6 @@
 import { MM } from "../MMToken";
 
-export const blocks = [
+export const MMBlockTemplates = [
   {
     "type": MM.Constant,
     "message0": '%1 %2',
@@ -39,6 +39,7 @@ export const blocks = [
     "output": MM.Variable,
     "colour": 330,
   },
+
   {
     "type": MM.FloatingHypo,
     "message0": '%1 %2',
@@ -57,22 +58,19 @@ export const blocks = [
     "output": MM.FloatingHypo,
     "colour": 230,
   },
+
   {
     "type": MM.Axiom,
-    "message0": '%1',
-    "args0": [
-      {
-        "type": "input_value",
-        "name": "DEF",
-        "check": [MM.Constant] // Starts with constant
-      }
-    ],
+    "message0": '',
+    "args0": [],
     "inputsInline": true,
     "previousStatement": null,
     "nextStatement": null,
     "output": MM.Axiom,
     "colour": 210,
+    // "mutator": MM.Axiom + '_mutator'
   },
+
   {
     "type": MM.EssentialHypo,
     "message0": '%1',
@@ -89,6 +87,7 @@ export const blocks = [
     "output": MM.EssentialHypo,
     "colour": 20,
   },
+
   {
     "type": MM.Block,
     "message0": 'b_axiom %1',
@@ -100,21 +99,28 @@ export const blocks = [
     ],
     "colour": 230,
   },
+
   {
     "type": MM.Proof,
-    "message0": 'Proof %1 %2',
+    "message0": "Theorem %1 Proof: %2 %3",
     "args0": [
       {
-        "type": "field_label_serializable",
+        "type": "field_input",
         "name": "ASSERTION",
-        "text": "NO_LABEL"
+        "text": "default"
+      },
+      {
+        "type": "input_dummy"
       },
       {
         "type": "input_statement",
-        "name": "PROOF"
+        "name": "PROOF",
+        "align": "CENTRE"
       },
     ],
-    "colour": 20,
+    "colour": 230,
+    "tooltip": "MM Proof block",
+    "helpUrl": ""
   },
   
 ]
@@ -156,7 +162,12 @@ export const toolbox = {
       "kind": "category",
       "name": "Proofs",
       "colour": 20,
-      "custom": "MM_PROOFS"
+      "contents": [
+        {
+          "kind": "block",
+          "type": MM.Proof
+        }
+      ]
     },
   ],
 };

@@ -15,7 +15,7 @@ import Blockly from "blockly";
 
 import { Parser } from './Parser.js'
 import SymbolsDB from "./SymbolsDB";
-import { blocks, toolbox } from "./toolbox/blockTemplates";
+import { MMBlockTemplates, toolbox } from "./toolbox/blockTemplates";
 import { ToolboxHandler } from "./toolbox/ToolboxHandler";
 
 
@@ -43,9 +43,31 @@ onMounted(async () => {
   SymbolsDB.initSymbols(parser.getParsedTokens());
   ToolboxHandler.registerToolboxCategoryCallbacks(workspace.value);
   
-  Blockly.defineBlocksWithJsonArray(blocks);
+  Blockly.defineBlocksWithJsonArray(MMBlockTemplates);
   workspace.value.updateToolbox(toolbox);
+
+  testWorkspace(workspace.value)
 });
+
+function testWorkspace(workspace) {
+  const tpl = workspace.newBlock('tpl');
+  const tt = workspace.newBlock('tt');
+  const tze = workspace.newBlock('tze');
+  
+  tt.setFieldValue('term', 'CONST');
+  tt.setFieldValue('t', 'VAR');
+
+  tpl.getInput('V2').connection
+    .connect(tt.outputConnection);
+
+  tpl.getInput('V4').connection
+    .connect(tze.outputConnection);
+
+  for (const block of [tpl, tze, tt]) {
+    block.initSvg();
+    block.render();
+  }
+}
 
 </script>
 

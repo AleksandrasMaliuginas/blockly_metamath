@@ -80,7 +80,8 @@ export class MMAxiom_mutator {
         },
       },
       undefined,
-      [MMAxiom, 'controls_if_else']);
+      [MM.Axiom, 'controls_if_else']
+    );
 
 
       

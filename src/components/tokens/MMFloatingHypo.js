@@ -1,5 +1,8 @@
 import SymbolsDB from "../SymbolsDB";
 import { MM, MMToken } from "../MMToken";
+import { Blocks } from "blockly";
+import { MMBlockTemplates } from "../toolbox/blockTemplates";
+import { MetamathGenerator } from "../MetamathGenerator";
 
 export class MMFloatingHypo extends MMToken {
 
@@ -26,13 +29,24 @@ export class MMFloatingHypo extends MMToken {
   }
 
   getBlock() {
+    Blocks[this.key] = {
+      init: function () {
+        this.jsonInit(MMBlockTemplates.find(el => el.type === MM.FloatingHypo));
+      }
+    };
+
+    // Register Code generator for this block
+    MetamathGenerator[this.key] = function (block) {
+      return [block.type, MetamathGenerator.PRECEDENCE];
+    };
+
     return {
       'kind': 'block',
-      'type': MM.FloatingHypo,
+      'type': this.key, // MM.FloatingHypo,
       'fields': {
         'CONST': this.value.constant.value,
         'VAR': this.value.variable.value,
-      }
+      },
     };
   }
 
