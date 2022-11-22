@@ -23,7 +23,7 @@ export const ToolboxHandler = {
         categoryClass[key]._toolboxFlyoutCallback
       );
 
-      // TESTING   TO DELETE
+      // TO DELETE AFTER BLOCK CREATION UPDATE
       categoryClass[key]._toolboxFlyoutCallback(null)
     }
     
