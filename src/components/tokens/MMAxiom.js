@@ -1,6 +1,8 @@
 import SymbolsDB from "../SymbolsDB";
 import { MM, MMToken } from "../MMToken";
-import { Blocks, Extensions } from "blockly";
+import { Blocks } from "blockly";
+import { MetamathGenerator } from "../MetamathGenerator";
+import { MMBlockTemplates } from "../toolbox/blockTemplates";
 
 
 export class MMAxiom extends MMToken {
@@ -24,13 +26,14 @@ export class MMAxiom extends MMToken {
   }
 
   getBlock() {
+    // Assign 'this' to a variable for use in the Block.init() function below.
     const axiom = this;
     const inputs = {};
 
+    // Register Block with TYPE = axiom.label
     Blocks[axiom.key] = {
       init: function () {
-        this.jsonInit(jsonAxiom);
-        // Assign 'this' to a variable for use in the tooltip closure below.
+        this.jsonInit(MMBlockTemplates.find(el => el.type === MM.Axiom));
 
         for (const i in axiom.value) {
           const val = axiom.value[i];
@@ -39,50 +42,33 @@ export class MMAxiom extends MMToken {
               .appendField(val.value);
           } else {
             this.appendValueInput(`V${i}`)
-              .setCheck(MM.Variable);
+              .setCheck([MM.Variable, MM.FloatingHypo, MM.Axiom]);
 
-            inputs[`V${i}`] = {'block': SymbolsDB.getSymbol(val.key).getBlock()};
+            inputs[`V${i}`] = { 'block': SymbolsDB.getSymbol(val.key).getBlock() };
           }
         }
 
-        // var thisBlock = this;
-        // this.setTooltip(function () {
-        //   return 'Add a number to variable "%1".'.replace('%1',
-        //     thisBlock.getFieldValue('VAR'));
-        // });
+        // console.log(inputs)
       }
     };
 
-    // console.log(Blocks)
+    // Register Code generator for this block
+    MetamathGenerator[axiom.key] = function (block) {
+      const blockInputs = block.inputList.filter(el => el.name[0] === 'V');
+
+      const mmParams = blockInputs.map(el => 
+        MetamathGenerator.valueToCode(block, el.name, MetamathGenerator.PRECEDENCE)
+      ).join(' ');
+      // console.log(mmParams)
+
+      return [mmParams + ' ' + block.type, MetamathGenerator.PRECEDENCE];
+    };
 
     return {
       'kind': 'block',
       'type': this.key,
       'inputs': inputs
     };
-
-
-    return {
-      'kind': 'block',
-      'type': MM.Axiom,
-      'inputs': {
-        'DEF': this._getInnerBlocks()
-      }
-    };
-  }
-
-  _getInnerBlocks(depth = 0) {
-    const currentBlock = {
-      "block": this.value[depth].getBlock()
-    };
-
-    if (depth < this.value.length - 1) {
-      currentBlock.block.inputs = {
-        "NEXT": this._getInnerBlocks(depth + 1)
-      }
-    }
-
-    return currentBlock;
   }
 
   static _toolboxFlyoutCallback(workspace) {
@@ -98,14 +84,3 @@ export class MMAxiom extends MMToken {
     return blockList;
   }
 }
-
-const jsonAxiom = {
-  "type": MM.Axiom,
-  "message0": '',
-  "args0": [],
-  "inputsInline": true,
-  "previousStatement": null,
-  "nextStatement": null,
-  "output": MM.Axiom,
-  "colour": 210,
-};

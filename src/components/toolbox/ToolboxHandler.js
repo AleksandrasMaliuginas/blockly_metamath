@@ -22,6 +22,9 @@ export const ToolboxHandler = {
         key,
         categoryClass[key]._toolboxFlyoutCallback
       );
+
+      // TESTING   TO DELETE
+      categoryClass[key]._toolboxFlyoutCallback(null)
     }
     
   },
