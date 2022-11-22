@@ -17,6 +17,7 @@ import { Parser } from './Parser.js'
 import SymbolsDB from "./SymbolsDB";
 import { MMBlockTemplates, toolbox } from "./toolbox/blockTemplates";
 import { ToolboxHandler } from "./toolbox/ToolboxHandler";
+import { WorkspaceInitializer } from "./WorkspaceInitializer";
 
 
 const props = defineProps(["options"]);
@@ -28,12 +29,12 @@ defineExpose({ workspace });
 
 onMounted(async () => {
   const options = props.options || {};
-  
+
   if (!options.toolbox) {
     options.toolbox = blocklyToolbox.value;
   }
   workspace.value = Blockly.inject(blocklyDiv.value, options);
-  
+
 
   const file = await fetch('demo0.mm');
   const fileStr = await file.text();
@@ -42,32 +43,13 @@ onMounted(async () => {
 
   SymbolsDB.initSymbols(parser.getParsedTokens());
   ToolboxHandler.registerToolboxCategoryCallbacks(workspace.value);
-  
+
   Blockly.defineBlocksWithJsonArray(MMBlockTemplates);
   workspace.value.updateToolbox(toolbox);
 
-  testWorkspace(workspace.value)
+  const initializer = new WorkspaceInitializer(workspace.value);
+  initializer.loadInitialState();
 });
-
-function testWorkspace(workspace) {
-  const tpl = workspace.newBlock('tpl');
-  const tt = workspace.newBlock('tt');
-  const tze = workspace.newBlock('tze');
-  
-  tt.setFieldValue('term', 'CONST');
-  tt.setFieldValue('t', 'VAR');
-
-  tpl.getInput('V2').connection
-    .connect(tt.outputConnection);
-
-  tpl.getInput('V4').connection
-    .connect(tze.outputConnection);
-
-  for (const block of [tpl, tze, tt]) {
-    block.initSvg();
-    block.render();
-  }
-}
 
 </script>
 
