@@ -10,7 +10,7 @@ export class MMConstant extends MMToken {
     return endIdx + 2;
   }
 
-  create() {
+  register() {
     return this.params.map(el => new MMConstant({
       key: el,
       type: MM.Constant,

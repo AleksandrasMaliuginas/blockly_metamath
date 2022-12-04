@@ -14,7 +14,7 @@ export class MMEssentialHypo extends MMToken {
     return endIdx + 2;
   }
 
-  create() {
+  register() {
     return new MMEssentialHypo({
       key: this.label,
       type: MM.EssentialHypo,
