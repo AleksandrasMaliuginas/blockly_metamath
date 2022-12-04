@@ -35,4 +35,8 @@ export const MM = {
   EssentialHypo: 'MMEssentialHypo',
   Block: 'MMBlock',
   Proof: 'MMProof',
+  /**
+   * Dummy token to group and reuse labels used in proof.
+   */
+  Function: 'MMFunction',
 }

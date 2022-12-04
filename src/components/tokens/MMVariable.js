@@ -1,13 +1,13 @@
 import { MM, MMToken } from "../MMToken";
-import SymbolsDB from "../SymbolsDB";
+import { TokenManager } from "../TokenManager";
 
 export class MMVariable extends MMToken {
 
-  parse(fileStr, idx) {
-    const end = fileStr.indexOf('$.', idx);
-    this.params = fileStr.slice(idx + 3, end - 1).split(' ');
+  parse(fileStr, startIdx) {
+    const endIdx = fileStr.indexOf('$.', startIdx);
+    this.params = fileStr.slice(startIdx + 3, endIdx - 1).split(' ');
 
-    return end + 2;
+    return endIdx + 2;
   }
 
   create() {
@@ -30,7 +30,7 @@ export class MMVariable extends MMToken {
 
   static _toolboxFlyoutCallback(workspace) {
     const blockList = [];
-    const variables = SymbolsDB.getSymbolsByType(MM.Variable);
+    const variables = TokenManager.getTokensByType(MM.Variable);
 
     for (const variable of variables) {
       blockList.push(

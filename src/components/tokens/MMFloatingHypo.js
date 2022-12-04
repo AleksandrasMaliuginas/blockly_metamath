@@ -1,4 +1,4 @@
-import SymbolsDB from "../SymbolsDB";
+import { TokenManager } from "../TokenManager";
 import { MM, MMToken } from "../MMToken";
 import { Blocks } from "blockly";
 import { MMBlockTemplates } from "../toolbox/blockTemplates";
@@ -6,15 +6,15 @@ import { MetamathGenerator } from "../MetamathGenerator";
 
 export class MMFloatingHypo extends MMToken {
 
-  parse(fileStr, idx) {
-    const end = fileStr.indexOf('$.', idx);
-    let params = fileStr.slice(idx, end).split(' ');
+  parse(fileStr, startIdx) {
+    const endIdx = fileStr.indexOf('$.', startIdx);
+    let params = fileStr.slice(startIdx, endIdx).split(' ');
 
     this.label = params[0];
     this.constant = params[2];
     this.variable = params[3];
 
-    return end + 2;
+    return endIdx + 2;
   }
 
   create() {
@@ -22,8 +22,8 @@ export class MMFloatingHypo extends MMToken {
       key: this.label,
       type: MM.FloatingHypo,
       value: {
-        constant: SymbolsDB.getSymbol(this.constant),
-        variable: SymbolsDB.getSymbol(this.variable),
+        constant: TokenManager.getToken(this.constant),
+        variable: TokenManager.getToken(this.variable),
       }
     });
   }
@@ -52,7 +52,7 @@ export class MMFloatingHypo extends MMToken {
 
   static _toolboxFlyoutCallback(workspace) {
     const blockList = [];
-    const floatingHypos = SymbolsDB.getSymbolsByType(MM.FloatingHypo);
+    const floatingHypos = TokenManager.getTokensByType(MM.FloatingHypo);
 
     for (const hypo of floatingHypos) {
       blockList.push(

@@ -1,5 +1,4 @@
-import SymbolsDB from "../SymbolsDB";
-import { MM, MMToken } from "../MMToken";
+import { MM } from "../MMToken";
 import { Extensions } from "blockly";
 
 

@@ -122,6 +122,25 @@ export const MMBlockTemplates = [
     "tooltip": "MM Proof block",
     "helpUrl": ""
   },
+
+  {
+    "type": MM.Function,
+    "message0": "%1 %2",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "NAME",
+        "text": "my_function_name"
+      },
+      {
+        "type": "input_value",
+        "name": "BODY"
+      },
+    ],
+    "colour": 120,
+    "tooltip": "Function block for reuse",
+    "helpUrl": ""
+  },
   
 ]
 
@@ -166,8 +185,21 @@ export const toolbox = {
         {
           "kind": "block",
           "type": MM.Proof
-        }
+        },
+        {
+          "kind": "block",
+          "type": MM.Function
+        },
       ]
+    },
+    {
+      "kind": "sep",
+    },
+    {
+      "kind": "category",
+      "name": "Segments",
+      "colour": 120,
+      "custom": "MM_FUNCTIONS"
     },
   ],
 };

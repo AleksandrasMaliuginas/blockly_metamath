@@ -14,7 +14,7 @@ import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
 
 import { Parser } from './Parser.js'
-import SymbolsDB from "./SymbolsDB";
+import { TokenManager } from "./TokenManager";
 import { MMBlockTemplates, toolbox } from "./toolbox/blockTemplates";
 import { ToolboxHandler } from "./toolbox/ToolboxHandler";
 import { WorkspaceInitializer } from "./WorkspaceInitializer";
@@ -39,14 +39,15 @@ onMounted(async () => {
   const file = await fetch('demo0.mm');
   const fileStr = await file.text();
   const parser = new Parser(fileStr);
-  parser.parse();
+  const fileTokens = parser.parse();
 
-  SymbolsDB.initSymbols(parser.getParsedTokens());
+  TokenManager.initTokens(fileTokens);
   ToolboxHandler.registerToolboxCategoryCallbacks(workspace.value);
 
   Blockly.defineBlocksWithJsonArray(MMBlockTemplates);
   workspace.value.updateToolbox(toolbox);
 
+  // For DEMO purposes
   const initializer = new WorkspaceInitializer(workspace.value);
   initializer.loadInitialState();
 });

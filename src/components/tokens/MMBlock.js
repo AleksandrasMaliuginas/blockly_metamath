@@ -1,22 +1,21 @@
-import MetamathSet from "../MetamathSet";
 import { MM, MMToken } from "../MMToken";
 import { Parser } from "../Parser";
-import SymbolsDB from "../SymbolsDB";
+import {TokenManager} from "../TokenManager";
 
 
 export class MMBlock extends MMToken {
   
-  parse(fileStr, idx) {
+  parse(fileStr, startIdx) {
     this.innerParser = new Parser(fileStr);
 
-    let end;
-    [end, this.tokens] = this.innerParser.parse(idx + 2);
+    let endIdx;
+    [endIdx, this.tokens] = this.innerParser.parseNext(startIdx + 2);
 
-    if (fileStr[end + 1] == '}') {
-      return end + 2;
+    if (fileStr[endIdx + 1] == '}') {
+      return endIdx + 2;
     }
 
-    return end;
+    return endIdx;
   }
 
   create() {
@@ -40,21 +39,9 @@ export class MMBlock extends MMToken {
     };
   }
 
-  // _getInnerBlocks(depth= 0) {
-  //   const currentBlock = {
-  //     "block": this.value[depth].getBlock()
-  //   };
-    
-  //   if (depth < this.value.length - 1) {
-  //     currentBlock.block = this._getInnerBlocks(depth + 1);
-  //   }
-    
-  //   return currentBlock;
-  // }
-
   static _toolboxFlyoutCallback(workspace) {
     let blockList = [];
-    const blocks = SymbolsDB.getSymbolsByType(MM.Block);
+    const blocks = TokenManager.getTokensByType(MM.Block);
 
     for (const block of blocks) {
       blockList.push(

@@ -1,7 +1,7 @@
-export default {
+export const TokenManager = {
   _symbols: [],
 
-  initSymbols(tokens) {
+  initTokens(tokens) {
     for (const token of tokens) {
       const symbol = token.create();
       if (Array.isArray(symbol)) {
@@ -11,18 +11,14 @@ export default {
       }
 
     }
-    console.table(this._symbols);
+    // console.table(this._symbols);
   },
 
-  getSymbol(key, currentKey= null) {
+  getToken(key) {
     return this._symbols.find(el => el.key === key);
   },
 
-  getSymbolsByType(type) {
+  getTokensByType(type) {
     return this._symbols.filter(el => el?.type === type);
-  },
-
-  getSymbolContext(key= null) {
-
   },
 }
