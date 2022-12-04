@@ -10,7 +10,7 @@ export class MMVariable extends MMToken {
     return endIdx + 2;
   }
 
-  create() {
+  register() {
     return this.params.map(el => new MMVariable({
       key: el,
       type: MM.Variable,

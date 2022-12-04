@@ -24,7 +24,7 @@ export class MMProof extends MMToken {
     return endIdx + 2;
   }
 
-  create() {
+  register() {
     return new MMProof({
       key: this.label,
       type: MM.Proof,

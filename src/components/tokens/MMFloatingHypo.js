@@ -17,7 +17,7 @@ export class MMFloatingHypo extends MMToken {
     return endIdx + 2;
   }
 
-  create() {
+  register() {
     return new MMFloatingHypo({
       key: this.label,
       type: MM.FloatingHypo,

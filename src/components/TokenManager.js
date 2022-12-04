@@ -3,7 +3,8 @@ export const TokenManager = {
 
   initTokens(tokens) {
     for (const token of tokens) {
-      const symbol = token.create();
+      const symbol = token.register();
+
       if (Array.isArray(symbol)) {
         this._symbols = [...this._symbols, ...symbol];
       } else {

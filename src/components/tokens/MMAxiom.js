@@ -17,7 +17,10 @@ export class MMAxiom extends MMToken {
     return endIdx + 2;
   }
 
-  create() {
+  register() {
+
+    
+
     return new MMAxiom({
       key: this.label,
       type: MM.Axiom,

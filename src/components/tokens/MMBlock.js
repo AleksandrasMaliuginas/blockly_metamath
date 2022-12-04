@@ -18,11 +18,11 @@ export class MMBlock extends MMToken {
     return endIdx;
   }
 
-  create() {
+  register() {
     return new MMBlock({
       key: '$B',
       type: MM.Block,
-      value: this.tokens.map(el => el.create()),
+      value: this.tokens.map(el => el.register()),
     });
   }
 

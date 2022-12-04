@@ -13,17 +13,12 @@ export class MMToken {
     }
   }
 
-  parse(fileStr, idx) {
+  parse(fileStr, startIdx) {
     throw new Error("Method 'parse(fileStr, idx)' must be implemented.");
   }
   
-  create() {
-    throw new Error("Method 'create()' must be implemented.");
-  }
-
-  getBlock() {
-    return;
-    throw new Error("Method  must be implemented.");
+  register() {
+    throw new Error("Method 'register()' must be implemented.");
   }
 }
 
