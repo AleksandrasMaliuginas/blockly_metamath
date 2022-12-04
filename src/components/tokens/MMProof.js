@@ -5,23 +5,23 @@ import { MMConstant } from "./MMConstant";
 
 export class MMProof extends MMToken {
 
-  parse(fileStr, idx) {
-    const commentsRegex = /\$\((.+?)\$\)/gs
-    const whitespaceRegex = /\s+/gs
+  parse(fileStr, startIdx) {
+    const commentsRegex = /\$\((.+?)\$\)/gs;
+    const whitespaceRegex = /\s+/gs;
 
-    const startOfProof = fileStr.indexOf('$=', idx);
-    const end = fileStr.indexOf('$.', idx);
+    const startOfProofIdx = fileStr.indexOf('$=', startIdx);
+    const endIdx = fileStr.indexOf('$.', startIdx);
 
-    let params = fileStr.slice(idx, startOfProof - 1).split(' ');
+    let params = fileStr.slice(startIdx, startOfProofIdx - 1).split(' ');
     this.label = params[0];
     this.assertion = params.slice(2);
-    this.proof = fileStr.slice(startOfProof + 3, end - 1)
+    this.proof = fileStr.slice(startOfProofIdx + 3, endIdx - 1)
       .replace(commentsRegex, '')
       .replace(whitespaceRegex, ' ')
       .trim()
       .split(' ');
 
-    return end + 2;
+    return endIdx + 2;
   }
 
   create() {
@@ -36,13 +36,6 @@ export class MMProof extends MMToken {
   }
 
   static _toolboxFlyoutCallback(workspace) {
-    // console.trace('Obaaa')
-    // const blocks = MMConstant._toolboxFlyoutCallback();
-    // const block = workspace.newBlock(blocks[0].type);
-    // block.initSvg();
-    // block.render();
-
-
     
   }
 }

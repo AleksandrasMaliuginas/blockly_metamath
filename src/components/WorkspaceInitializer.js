@@ -22,7 +22,6 @@ export class WorkspaceInitializer {
     tt1.setFieldValue('term', 'CONST');
     tt1.setFieldValue('t', 'VAR');
 
-    console.log(weq)
     // weq.getInput('V1').connection.connect(tpl.outputConnection);
     weq.getInput('V3').connection.connect(tt1.outputConnection);
 

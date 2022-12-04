@@ -1,4 +1,4 @@
-import SymbolsDB from "../SymbolsDB";
+import {TokenManager} from "../TokenManager";
 import { MM, MMToken } from "../MMToken";
 import { Blocks } from "blockly";
 import { MetamathGenerator } from "../MetamathGenerator";
@@ -7,21 +7,21 @@ import { MMBlockTemplates } from "../toolbox/blockTemplates";
 
 export class MMAxiom extends MMToken {
 
-  parse(fileStr, idx) {
-    const end = fileStr.indexOf('$.', idx);
+  parse(fileStr, startIdx) {
+    const endIdx = fileStr.indexOf('$.', startIdx);
 
-    let params = fileStr.slice(idx, end - 1).split(' ');
+    let params = fileStr.slice(startIdx, endIdx - 1).split(' ');
     this.label = params[0];
     this.params = params.slice(2);
 
-    return end + 2;
+    return endIdx + 2;
   }
 
   create() {
     return new MMAxiom({
       key: this.label,
       type: MM.Axiom,
-      value: this.params.map(el => SymbolsDB.getSymbol(el)),
+      value: this.params.map(el => TokenManager.getToken(el)),
     });
   }
 
@@ -44,7 +44,7 @@ export class MMAxiom extends MMToken {
             this.appendValueInput(`V${i}`)
               .setCheck([MM.Variable, MM.FloatingHypo, MM.Axiom]);
 
-            inputs[`V${i}`] = { 'block': SymbolsDB.getSymbol(val.key).getBlock() };
+            inputs[`V${i}`] = { 'block': TokenManager.getToken(val.key).getBlock() };
           }
         }
 
@@ -59,7 +59,6 @@ export class MMAxiom extends MMToken {
       const mmParams = blockInputs.map(el => 
         MetamathGenerator.valueToCode(block, el.name, MetamathGenerator.PRECEDENCE)
       ).join(' ');
-      // console.log(mmParams)
 
       return [mmParams + ' ' + block.type, MetamathGenerator.PRECEDENCE];
     };
@@ -73,7 +72,7 @@ export class MMAxiom extends MMToken {
 
   static _toolboxFlyoutCallback(workspace) {
     const blockList = [];
-    const axioms = SymbolsDB.getSymbolsByType(MM.Axiom);
+    const axioms = TokenManager.getTokensByType(MM.Axiom);
 
     for (const axiom of axioms) {
       blockList.push(

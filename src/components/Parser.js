@@ -4,12 +4,16 @@ export class Parser {
   constructor(fileString) {
     this.fileStr = fileString;
     this.tokens = [];
-    this.fLength = this.fileStr.length;
   }
 
   parse(idx = 0) {
+    this.parseNext(idx);
+    return this.tokens;
+  }
+
+  parseNext(idx = 0) {
     if (this._isWhiteSpace(this.fileStr[idx])) {
-      return this.parse(idx + 1);
+      return this.parseNext(idx + 1);
     }
 
     const dolerIdx = this.fileStr.indexOf('$', idx);
@@ -26,20 +30,16 @@ export class Parser {
       this.tokens.push(mmComponent);
     }
 
-    return this.parse(idx);
+    return this.parseNext(idx);
   }
 
   _isWhiteSpace(s) {
     return /\s/.test(s);
-  }
-
-  getParsedTokens() {
-    return this.tokens;
   }
 }
 
 /**
  * TODO:
  * file inclusion $[ ... $]
- * 
+ * pre Parse to remove comments
  */
