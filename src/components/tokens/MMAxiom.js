@@ -18,9 +18,6 @@ export class MMAxiom extends MMToken {
   }
 
   register() {
-
-    
-
     return new MMAxiom({
       key: this.label,
       type: MM.Axiom,
@@ -50,8 +47,9 @@ export class MMAxiom extends MMToken {
             inputs[`V${i}`] = { 'block': TokenManager.getToken(val.key).getBlock() };
           }
         }
-
-        // console.log(inputs)
+        
+        const toString = axiom.value.map(el => el.value).join(" ");
+        this.setTooltip(() => `${toString} \n Variable explanations (details)`);
       }
     };
 
