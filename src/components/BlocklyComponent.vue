@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 /**
  * @license
  * Copyright 2022 Google LLC
@@ -13,7 +13,7 @@
 import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
 
-import { Parser } from './Parser.js'
+import { Parser } from './Parser'
 import { TokenManager } from "./TokenManager";
 import { MMBlockTemplates, toolbox } from "./toolbox/blockTemplates";
 import { ToolboxHandler } from "./toolbox/ToolboxHandler";
@@ -57,9 +57,9 @@ onMounted(async () => {
 <template>
   <div>
     <div class="blocklyDiv" ref="blocklyDiv"></div>
-    <xml ref="blocklyToolbox" style="display: none">
+    <!-- <xml ref="blocklyToolbox" style="display: none">
       <slot></slot>
-    </xml>
+    </xml> -->
   </div>
 </template>
 
