@@ -124,13 +124,13 @@ export const MMBlockTemplates = [
   },
 
   {
-    "type": MM.Function,
+    "type": MM.SegmentDef,
     "message0": "%1 %2",
     "args0": [
       {
         "type": "field_input",
         "name": "NAME",
-        "text": "my_function_name"
+        "text": "my_segment_name"
       },
       {
         "type": "input_value",
@@ -141,6 +141,22 @@ export const MMBlockTemplates = [
     "tooltip": "Function block for reuse",
     "helpUrl": ""
   },
+
+  {
+    "type": MM.SegmentRef,
+    "message0": "%1",
+    "args0": [
+      {
+        "type": "field_label_serializable",
+        "name": "NAME",
+        "text": "my_segment_name"
+      }
+    ],
+    "output": null,
+    "colour": 120,
+    "tooltip": "",
+    "helpUrl": ""
+  }
   
 ]
 
@@ -188,7 +204,7 @@ export const toolbox = {
         },
         {
           "kind": "block",
-          "type": MM.Function
+          "type": MM.Segment
         },
       ]
     },
@@ -199,7 +215,7 @@ export const toolbox = {
       "kind": "category",
       "name": "Segments",
       "colour": 120,
-      "custom": "MM_FUNCTIONS"
+      "custom": "MM_SEGMENTS"
     },
   ],
 };

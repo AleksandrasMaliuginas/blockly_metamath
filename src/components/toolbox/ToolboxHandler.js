@@ -4,7 +4,7 @@ import { MMFloatingHypo } from "../tokens/MMFloatingHypo";
 import { MMAxiom } from "../tokens/MMAxiom";
 import { MMBlock } from "../tokens/MMBlock";
 import { MMProof } from "../tokens/MMProof";
-import { Function } from "../tokens/Function";
+import { Segment } from "../SegmentManager";
 
 
 export const ToolboxHandler = {
@@ -16,7 +16,7 @@ export const ToolboxHandler = {
       'MM_AXIOMS': MMAxiom,
       'MM_BLOCKS': MMBlock,
       'MM_PROOFS': MMProof,
-      'MM_FUNCTIONS': Function,
+      'MM_SEGMENTS': Segment,
     }
 
     for (const key of Object.keys(categoryClass)) {

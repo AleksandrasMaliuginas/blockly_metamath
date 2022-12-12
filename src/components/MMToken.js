@@ -31,7 +31,8 @@ export const MM = {
   Block: 'MMBlock',
   Proof: 'MMProof',
   /**
-   * Dummy token to group and reuse labels used in proof.
+   * Dummy token names to group and reuse labels used in proof.
    */
-  Function: 'MMFunction',
+   SegmentDef: 'SegmentDef',
+   SegmentRef: 'SegmentRef',
 }
