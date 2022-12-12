@@ -64,8 +64,6 @@ export const MMBlockTemplates = [
     "message0": '',
     "args0": [],
     "inputsInline": true,
-    "previousStatement": null,
-    "nextStatement": null,
     "output": MM.Axiom,
     "colour": 210,
     // "mutator": MM.Axiom + '_mutator'
@@ -82,8 +80,8 @@ export const MMBlockTemplates = [
       }
     ],
     "inputsInline": true,
-    "previousStatement": null,
-    "nextStatement": null,
+    // "previousStatement": null,
+    // "nextStatement": null,
     "output": MM.EssentialHypo,
     "colour": 20,
   },
@@ -102,7 +100,7 @@ export const MMBlockTemplates = [
 
   {
     "type": MM.Proof,
-    "message0": "Theorem %1 Proof: %2 %3",
+    "message0": "Assertion: %1 %2 Proof: %3",
     "args0": [
       {
         "type": "field_input",
@@ -113,9 +111,8 @@ export const MMBlockTemplates = [
         "type": "input_dummy"
       },
       {
-        "type": "input_statement",
-        "name": "PROOF",
-        "align": "CENTRE"
+        "type": "input_value",
+        "name": "PROOF"
       },
     ],
     "colour": 230,
@@ -158,7 +155,7 @@ export const MMBlockTemplates = [
     "helpUrl": ""
   }
   
-]
+];
 
 export const toolbox = {
   "kind": "categoryToolbox",
@@ -201,11 +198,7 @@ export const toolbox = {
         {
           "kind": "block",
           "type": MM.Proof
-        },
-        {
-          "kind": "block",
-          "type": MM.Segment
-        },
+        }
       ]
     },
     {

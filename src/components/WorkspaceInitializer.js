@@ -22,14 +22,16 @@ export class WorkspaceInitializer {
     tt1.setFieldValue('term', 'CONST');
     tt1.setFieldValue('t', 'VAR');
 
-    // weq.getInput('V1').connection.connect(tpl.outputConnection);
     weq.getInput('V3').connection.connect(tt1.outputConnection);
-
-
-
+    
     for (const block of [tpl, weq, tze, tt, tt1]) {
       block.initSvg();
       block.render();
     }
+    
+    weq.getInput('V1').connection.connect(tpl.outputConnection);
+    weq.markDirty();
+    weq.render();
+
   }
 }
