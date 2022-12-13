@@ -13,12 +13,13 @@
 import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
 
-import { Parser } from './Parser'
+import { DatabaseParser } from "./DatabaseParser/DatabaseParser";
+
+import { Parser } from "./Parser";
 import { TokenManager } from "./TokenManager";
 import { MMBlockTemplates, toolbox } from "./toolbox/blockTemplates";
 import { ToolboxHandler } from "./toolbox/ToolboxHandler";
 import { WorkspaceInitializer } from "./WorkspaceInitializer";
-
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -35,9 +36,13 @@ onMounted(async () => {
   }
   workspace.value = Blockly.inject(blocklyDiv.value, options);
 
-
-  const file = await fetch('demo0.mm');
+  const file = await fetch("demo0.mm");
   const fileStr = await file.text();
+
+  const databaseParser = new DatabaseParser(fileStr);
+  const parsedStatements = databaseParser.parse();
+  // console.table(parsedStatements);
+
   const parser = new Parser(fileStr);
   const fileTokens = parser.parse();
 
@@ -51,7 +56,6 @@ onMounted(async () => {
   const initializer = new WorkspaceInitializer(workspace.value);
   initializer.loadInitialState();
 });
-
 </script>
 
 <template>
