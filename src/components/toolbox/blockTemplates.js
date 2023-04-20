@@ -100,21 +100,26 @@ export const MMBlockTemplates = [
 
   {
     "type": MM.Proof,
-    "message0": "Assertion: %1 %2 Proof: %3",
+    "message0": "Label: %1 %2 Assertion: %3 Proof: %4",//"Assertion: %1 %2 Proof: %3",
     "args0": [
       {
         "type": "field_input",
-        "name": "ASSERTION",
-        "text": "default"
+        "name": "LABEL",
+        "text": "th1"
       },
       {
         "type": "input_dummy"
       },
       {
         "type": "input_value",
+        "name": "ASSERTION"
+      },
+      {
+        "type": "input_value",
         "name": "PROOF"
       },
     ],
+    "inputsInline": false,
     "colour": 230,
     "tooltip": "MM Proof block",
     "helpUrl": ""
