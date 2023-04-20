@@ -13,12 +13,9 @@
 import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
 
-import { Parser } from './Parser'
-import { TokenManager } from "./TokenManager";
-import { MMBlockTemplates, toolbox } from "./toolbox/blockTemplates";
-import { ToolboxHandler } from "./toolbox/ToolboxHandler";
-import { WorkspaceInitializer } from "./WorkspaceInitializer";
-
+import { DatabaseParser } from "./DatabaseParser/DatabaseParser";
+import { BlockRegistry } from "./BlocklyElements/BlockRegistry";
+import { ToolboxBuilder } from "./BlocklyElements/Toolbox/ToolboxBuilder";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -28,6 +25,8 @@ const workspace = shallowRef();
 defineExpose({ workspace });
 
 onMounted(async () => {
+
+  // Setup blockly workspace
   const options = props.options || {};
 
   if (!options.toolbox) {
@@ -35,23 +34,29 @@ onMounted(async () => {
   }
   workspace.value = Blockly.inject(blocklyDiv.value, options);
 
-
-  const file = await fetch('demo0.mm');
+  // Open MM file
+  const file = await fetch("demo0.mm");
   const fileStr = await file.text();
-  const parser = new Parser(fileStr);
-  const fileTokens = parser.parse();
 
-  TokenManager.initTokens(fileTokens);
-  ToolboxHandler.registerToolboxCategoryCallbacks(workspace.value);
+  // Parse MM database file
+  const databaseParser = new DatabaseParser(fileStr);
+  const parsedStatements = databaseParser.parse();
+  console.table(parsedStatements);
 
-  Blockly.defineBlocksWithJsonArray(MMBlockTemplates);
-  workspace.value.updateToolbox(toolbox);
+  // Create blockly blocks
+  const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value);
+  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder);
+  blockRegistry.mmStatements(parsedStatements);
+
+  // Create Blockly toolbox
+  workspace.value.updateToolbox(toolboxBuilder.getToolboxJson());
+
+  
 
   // For DEMO purposes
-  const initializer = new WorkspaceInitializer(workspace.value);
-  initializer.loadInitialState();
+  // const initializer = new WorkspaceInitializer(workspace.value);
+  // initializer.loadInitialState();
 });
-
 </script>
 
 <template>

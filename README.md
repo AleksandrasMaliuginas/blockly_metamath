@@ -1,6 +1,22 @@
+# Set node version:
+   
+   nvm use
+
+Will take version specified in .nvmrc file
+
+# Start app
+
+   npx vite
+
+
 # Blockly GUI for Metamath language
 
 Visualizing Metamath proof creation.
+
+
+
+
+
 
 # Vue 3 + TypeScript + Vite
 

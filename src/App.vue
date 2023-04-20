@@ -19,13 +19,13 @@ import { MetamathGenerator } from './components/MetamathGenerator'
 const foo = ref();
 const code = ref();
 const options = {
-  // media: "media/",
   grid: {
     spacing: 25,
     length: 3,
     colour: "#ccc",
     snap: true,
   },
+  // TODO: Remove unused xml toolbar
   toolbox: `<xml>
           <category name="Logic" colour="%{BKY_LOGIC_HUE}">
             <block type="controls_if"></block>
