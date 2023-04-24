@@ -16,6 +16,7 @@ import Blockly from "blockly";
 import { DatabaseParser } from "./DatabaseParser/DatabaseParser";
 import { BlockRegistry } from "./BlocklyElements/BlockRegistry";
 import { ToolboxBuilder } from "./BlocklyElements/Toolbox/ToolboxBuilder";
+import { MMRenderer, RENDERER_NAME } from "./MMBlockRenderer/MMRenderer";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -25,6 +26,8 @@ const workspace = shallowRef();
 defineExpose({ workspace });
 
 onMounted(async () => {
+  // Register custom Blockly renderer for metamath
+  Blockly.blockRendering.register(RENDERER_NAME, MMRenderer);
 
   // Setup blockly workspace
   const options = props.options || {};
@@ -32,6 +35,7 @@ onMounted(async () => {
   if (!options.toolbox) {
     options.toolbox = blocklyToolbox.value;
   }
+  options.renderer = RENDERER_NAME;
   workspace.value = Blockly.inject(blocklyDiv.value, options);
 
   // Open MM file

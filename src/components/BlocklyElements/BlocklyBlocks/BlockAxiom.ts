@@ -2,26 +2,26 @@
 import { Block } from "blockly";
 import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { StatementContext } from "../BlockRegistry";
 import { Keywords } from "../../DatabaseParser/MM";
 import { Constant } from "../../DatabaseParser/MMStatements/Constant";
 import { Variable } from "../../DatabaseParser/MMStatements/Variable";
+import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
+import { IMMStatement } from "../../DatabaseParser/IMMStatement";
+import { MMRenderInfo } from "../../MMBlockRenderer/MMRenderInfo";
 
-class Axiom implements IBlocklyBlock {
+class BlockAxiom implements IBlocklyBlock {
 
   private readonly label: string | undefined;
   private readonly originalStatement: string | undefined;
-  private readonly constant: string | undefined;
-  private readonly mathSymbols: string[] | undefined;
+
+  private readonly innerStatements: IMMStatement[] | undefined;
   private readonly context : StatementContext;
 
-  constructor(parsedStatement: AxiomaticAssertion, context : StatementContext) {
+  constructor(parsedStatement: ScopingBlock, context : StatementContext) {
     this.label = parsedStatement.label;
     this.originalStatement = parsedStatement.originalStatement;
-
-    this.constant = parsedStatement.constant;
-    this.mathSymbols = parsedStatement.mathSymbols;
+    this.innerStatements = parsedStatement.statements;
     this.context = context;
   }
 
@@ -43,21 +43,31 @@ class Axiom implements IBlocklyBlock {
 
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
-
-    this.mathSymbols?.forEach((symbol, index) => {
-
-      if (this.isConstant(symbol)) {
-        block.appendDummyInput(`C${index}`).appendField(symbol);
-      }
-
-      if (this.isVariable(symbol)) {
-        block.appendValueInput(`V${index}`);
-        // .setCheck([MM.Variable, MM.FloatingHypo, MM.Axiom]);
-      }
-    });
+    
+    this.initInnerStatements(block);
 
     block.setTooltip(() => {
       return this.originalStatement ? this.originalStatement : "No tooltip provided.";
+    });
+  }
+
+  private initInnerStatements(block: Block) {
+    const statementCount = this.innerStatements ? this.innerStatements.length : 0;
+
+    this.innerStatements?.forEach((statement, statementIndex) => {
+      statement.mathSymbols?.forEach((symbol, index) => {
+          if (this.isConstant(symbol)) {
+            block.appendDummyInput(`${statement.label}.C${index}`).appendField(symbol);
+          }
+
+          if (this.isVariable(symbol)) {
+            block.appendValueInput(`${statement.label}.V${index}`);
+          }
+      });
+
+      if (statementIndex < statementCount - 1) {
+        block.appendDummyInput(MMRenderInfo.NEW_LINE_INDICATOR)
+      }
     });
   }
 
@@ -77,7 +87,7 @@ class Axiom implements IBlocklyBlock {
 }
 
 const jsonBlockTemplate = {
-  "type": BlockType.Axiom,
+  "type": BlockType.Block,
   "message0": '',
   "args0": [],
   "inputsInline": true,
@@ -86,4 +96,4 @@ const jsonBlockTemplate = {
   // "mutator": MM.Axiom + '_mutator'
 };
 
-export { Axiom }
+export { BlockAxiom }

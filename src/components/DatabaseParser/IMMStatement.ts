@@ -3,6 +3,7 @@ export interface IMMStatement {
   label: string | undefined;
   keyword: string | undefined;
   originalStatement: string | undefined;
+  mathSymbols: string[] | undefined;
 
   /**
    * Parse statement starting at 'startIndex'.

@@ -3,6 +3,7 @@ import { toolboxJson } from "./toolboxJson";
 import { FloatingHypo } from "../BlocklyBlocks/FloatingHypo";
 import { IBlocklyBlock } from "../IBlocklyBlock";
 import { Axiom } from "../BlocklyBlocks/Axiom";
+import { BlockAxiom } from "../BlocklyBlocks/BlockAxiom";
 
 class ToolboxBuilder {
   
@@ -27,29 +28,25 @@ class ToolboxBuilder {
     const categoryClass : Map<string, any> = new Map([
       ['MM_FLOATING_HYPOS', this.getFloatingHypoBlocks],
       ['MM_AXIOMS', this.getAxiomBlocks],
-      ['MM_BLOCKS', this.getFloatingHypoBlocks],
+      ['MM_BLOCKS', this.getBlockAxiomBlocks],
     ]);
 
     categoryClass.forEach((value, key) => {
-      console.log(key, value._toolboxFlyoutCallback)
       this.targetWorkspace.registerToolboxCategoryCallback(
         key, value
       );
     });    
   }
 
-  private getFloatingHypoBlocks = () => {
-    return this.blockList.reduce((arr, block : IBlocklyBlock) => {
-      if (block instanceof FloatingHypo) {
-        arr.push(block.toolboxInstance());
-      }
-      return arr;
-    }, []);
-  }
+  private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypo);
 
-  private getAxiomBlocks = () => {
+  private getAxiomBlocks = () => this.getBlocksByObjectType(Axiom);
+
+  private getBlockAxiomBlocks = () => this.getBlocksByObjectType(BlockAxiom);
+
+  private getBlocksByObjectType = (classtype : any) => {
     return this.blockList.reduce((arr, block : IBlocklyBlock) => {
-      if (block instanceof Axiom) {
+      if (block instanceof classtype) {
         arr.push(block.toolboxInstance());
       }
       return arr;

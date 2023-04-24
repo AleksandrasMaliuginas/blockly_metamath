@@ -16,6 +16,7 @@ class ScopingBlock implements IMMStatement {
     this.statements = innerParser.parse(startIndex);
     const endIndex = dbStr.indexOf(Keywords.END_OF_SCOPING_BLOCK, innerParser.endIndex);
     
+    this.label = this.statements.findLast(s => s)?.label;
     this.originalStatement = dbStr.slice(startIndex, endIndex).trim();
 
     return endIndex + 2;
