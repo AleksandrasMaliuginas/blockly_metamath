@@ -15,9 +15,10 @@ export const enum BlockTypes {
   // EssentialHypo = 'MMEssentialHypo',
   Block = 'MMBlock',
   Proof = 'MMProof',
-  // /**
-  //  * Dummy token names to group and reuse labels used in proof.
-  //  */
-  //  SegmentDef = 'SegmentDef',
-  //  SegmentRef = 'SegmentRef',
+
+  /**
+   * Dummy token names to group and reuse labels used in proof.
+   */
+  SegmentDef = 'SegmentDef',
+  SegmentRef = 'SegmentRef',
 }

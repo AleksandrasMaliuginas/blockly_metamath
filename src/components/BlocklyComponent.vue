@@ -17,6 +17,7 @@ import { DatabaseParser } from "./DatabaseParser/DatabaseParser";
 import { BlockRegistry } from "./BlocklyElements/BlockRegistry";
 import { ToolboxBuilder } from "./BlocklyElements/Toolbox/ToolboxBuilder";
 import { MMRenderer, RENDERER_NAME } from "./MMBlockRenderer/MMRenderer";
+import { SegmentManager } from "./BlocklyElements/BlocklyBlocks/SegmentManager";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
@@ -48,11 +49,13 @@ onMounted(async () => {
   console.table(parsedStatements);
 
   // Create blockly blocks
-  const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value);
-  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder);
+  const segmentManager = new SegmentManager(workspace.value);
+  const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager);
+  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, segmentManager);
   blockRegistry.mmStatements(parsedStatements);
 
   // Create Blockly toolbox
+  // TODO: move to toolbox builder. toolboxBuilder.updateToolbox()
   workspace.value.updateToolbox(toolboxBuilder.getToolboxJson());
 
   

@@ -2,12 +2,13 @@ import { Blocks } from "blockly";
 import { IMMStatement } from "../DatabaseParser/IMMStatement";
 import { FloatingHypo } from "./BlocklyBlocks/FloatingHypo";
 import { VariableHypothesis } from "../DatabaseParser/MMStatements/VariableHypothesis";
-import { IBlocklyBlock } from "./IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "./IBlocklyBlock";
 import { ToolboxBuilder } from "./Toolbox/ToolboxBuilder";
 import { AxiomaticAssertion } from "../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { Axiom } from "./BlocklyBlocks/Axiom";
 import { ScopingBlock } from "../DatabaseParser/MMStatements/ScopingBlock";
 import { BlockAxiom } from "./BlocklyBlocks/BlockAxiom";
+import { SegmentManager } from "./BlocklyBlocks/SegmentManager";
 
 interface IBlockRegistry {
   mmStatements(mm_statement_list : IMMStatement[]) : void
@@ -17,15 +18,23 @@ class BlockRegistry implements IBlockRegistry {
 
   private readonly registeredBlocks : IBlocklyBlock[] = []
   private readonly toolboxBuilder : ToolboxBuilder;
+  private readonly segmentManager : SegmentManager;
   private mm_statements: IMMStatement[] = [];
 
-  constructor(toolboxBuilder: ToolboxBuilder) {
+  constructor(toolboxBuilder: ToolboxBuilder, segmentManager : SegmentManager) {
     this.toolboxBuilder = toolboxBuilder;
+    this.segmentManager = segmentManager;
+    this.defineSegmentBlocks();
   }
 
-  mmStatements(mm_statement_list: IMMStatement[]): void {
+  public mmStatements(mm_statement_list: IMMStatement[]): void {
     this.mm_statements = mm_statement_list;
     mm_statement_list.forEach(this.createBlocklyElement);
+  }
+
+  private defineSegmentBlocks() : void {
+    Blocks[BlockTypes.SegmentDef] = this.segmentManager.segmentDefinitionBlock();
+    Blocks[BlockTypes.SegmentRef] = this.segmentManager.segmentReferenceBlock();
   }
 
   private createBlocklyElement = (mmStatement : IMMStatement, index : number) => {

@@ -53,7 +53,7 @@ export const toolboxJson : any = {
       "kind": "category",
       "name": "Segments",
       "colour": 120,
-      "custom": "MM_SEGMENTS"
+      "custom": "SEGMENTS"
     },
   ],
 };
