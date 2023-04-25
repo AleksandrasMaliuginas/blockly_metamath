@@ -75,13 +75,18 @@ class BlockAxiom implements IBlocklyBlock {
     });
   }
 
+
   // TODO: Leaking logic | Context should be in the Database parser
   private isConstant(symbol : string) {
-    return this.context.mmStatements.some(statement => statement.label === symbol && statement.keyword === Keywords.CONSTANT);
+    const constant : Constant = this.context.mmStatements.find(statement => statement.keyword === Keywords.CONSTANT) as Constant;
+
+    return constant.mathSymbols.includes(symbol);
   }
 
   private isVariable(symbol : string) {
-    return this.context.mmStatements.some(statement => statement.label === symbol && statement.keyword === Keywords.VARIABLE);
+    const variable : Variable = this.context.mmStatements.find(statement => statement.keyword === Keywords.VARIABLE) as Variable;
+
+    return variable.mathSymbols.includes(symbol);
   }
 }
 

@@ -1,11 +1,17 @@
-import { IDatabaseParser } from './IDatabaseParser'
 import { IMMStatement } from './IMMStatement';
 import { Keywords } from './MM';
+import { Constant } from './MMStatements/Constant';
+import { Variable } from './MMStatements/Variable';
 import { StatementBuilder } from './StatementBuilder';
+
+export interface IDatabaseParser {
+  parse() : IMMStatement[] 
+}
 
 class DatabaseParser implements IDatabaseParser {
 
   private databaseString: string;
+  // TODO: Introduce proper statement context
   private activeMathSymbols: string[];
   private _parsedStatements: IMMStatement[] = [];
   private _endIndex = 0;
@@ -19,7 +25,7 @@ class DatabaseParser implements IDatabaseParser {
     this.preprocess();
     this.parseNext(startIndex);
 
-    return this._parsedStatements;
+    return this.extrapolatedStatements();
   }
 
   /**
@@ -39,7 +45,6 @@ class DatabaseParser implements IDatabaseParser {
     this._endIndex = statement.parse(this.databaseString, startIndex);
 
     this.parsedStatements.push(statement);
-    // console.log(this._endIndex, statement);
 
     return this.parseNext(this._endIndex);
   }
@@ -50,6 +55,30 @@ class DatabaseParser implements IDatabaseParser {
     this.databaseString = this.databaseString
       .replace(commentsRegex, '')
       .trim();
+  }
+
+  private extrapolatedStatements() : IMMStatement[] {
+    return this._parsedStatements.reduce((arr, statement : IMMStatement) => {
+
+      if (statement instanceof Constant) {
+        const originalStatement = statement.originalStatement ? statement.originalStatement : "NONE";
+        statement.mathSymbols.forEach(symbol => {
+          arr.push(new Constant(symbol, originalStatement))
+        });
+        return arr;
+      }
+
+      if (statement instanceof Variable) {
+        const originalStatement = statement.originalStatement ? statement.originalStatement : "NONE";
+        statement.mathSymbols.forEach(symbol => {
+          arr.push(new Variable(symbol, originalStatement))
+        });
+        return arr;
+      }
+
+      arr.push(statement);
+      return arr;
+    }, [] as IMMStatement[]);
   }
 
   public get parsedStatements() {
