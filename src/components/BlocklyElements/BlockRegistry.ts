@@ -1,4 +1,4 @@
-import { Blocks } from "blockly";
+import { Blocks, Generator } from "blockly";
 import { IMMStatement } from "../DatabaseParser/IMMStatement";
 import { FloatingHypo } from "./BlocklyBlocks/FloatingHypo";
 import { VariableHypothesis } from "../DatabaseParser/MMStatements/VariableHypothesis";
@@ -16,14 +16,15 @@ interface IBlockRegistry {
 
 class BlockRegistry implements IBlockRegistry {
 
-  private readonly registeredBlocks : IBlocklyBlock[] = []
   private readonly toolboxBuilder : ToolboxBuilder;
   private readonly segmentManager : SegmentManager;
+  private readonly codeGenerator : any; 
   private mm_statements: IMMStatement[] = [];
 
-  constructor(toolboxBuilder: ToolboxBuilder, segmentManager : SegmentManager) {
+  constructor(toolboxBuilder: ToolboxBuilder, segmentManager : SegmentManager, codeGenerator : Generator) {
     this.toolboxBuilder = toolboxBuilder;
     this.segmentManager = segmentManager;
+    this.codeGenerator = codeGenerator as any;
     this.defineSegmentBlocks();
   }
 
@@ -35,6 +36,8 @@ class BlockRegistry implements IBlockRegistry {
   private defineSegmentBlocks() : void {
     Blocks[BlockTypes.SegmentDef] = this.segmentManager.segmentDefinitionBlock();
     Blocks[BlockTypes.SegmentRef] = this.segmentManager.segmentReferenceBlock();
+    this.codeGenerator[BlockTypes.SegmentDef] = () => "";
+    this.codeGenerator[BlockTypes.SegmentRef] = () => "";
   }
 
   private createBlocklyElement = (mmStatement : IMMStatement, index : number) => {
@@ -48,7 +51,7 @@ class BlockRegistry implements IBlockRegistry {
 
     if (block) {
       Blocks[mmStatement.label] = block.initializer();
-      this.registeredBlocks.push(block);
+      this.codeGenerator[mmStatement.label] = block.blockToCode;
       this.toolboxBuilder.addBlock(block);
     }
   }

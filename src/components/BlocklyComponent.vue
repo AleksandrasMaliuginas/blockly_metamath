@@ -16,7 +16,7 @@ import Blockly from "blockly";
 import { DatabaseParser } from "./DatabaseParser/DatabaseParser";
 import { BlockRegistry } from "./BlocklyElements/BlockRegistry";
 import { ToolboxBuilder } from "./BlocklyElements/Toolbox/ToolboxBuilder";
-import { MMRenderer, RENDERER_NAME } from "./MMBlockRenderer/MMRenderer";
+import { MMRenderer, RENDERER_NAME } from "./BlockRenderer/MMRenderer";
 import { SegmentManager } from "./BlocklyElements/BlocklyBlocks/SegmentManager";
 
 const props = defineProps(["options"]);
@@ -24,7 +24,9 @@ const blocklyToolbox = ref();
 const blocklyDiv = ref();
 const workspace = shallowRef();
 
-defineExpose({ workspace });
+const codeGenerator = new Blockly.Generator('metamath');
+
+defineExpose({ workspace, codeGenerator });
 
 onMounted(async () => {
   // Register custom Blockly renderer for metamath
@@ -51,7 +53,7 @@ onMounted(async () => {
   // Create blockly blocks
   const segmentManager = new SegmentManager(workspace.value);
   const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager);
-  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, segmentManager);
+  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, segmentManager, codeGenerator);
   blockRegistry.mmStatements(parsedStatements);
 
   // Create Blockly toolbox

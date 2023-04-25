@@ -14,9 +14,8 @@
 
 import { ref } from "vue";
 import BlocklyComponent from "./components/BlocklyComponent.vue";
-import { MetamathGenerator } from './components/MetamathGenerator'
 
-const foo = ref();
+const blocklyComponent = ref();
 const code = ref();
 const options = {
   grid: {
@@ -66,7 +65,7 @@ const options = {
         </xml>`,
 };
 
-const showCode = () => (code.value = MetamathGenerator.workspaceToCode(foo.value.workspace));
+const showCode = () => (code.value = blocklyComponent.value.codeGenerator.workspaceToCode(blocklyComponent.value.workspace));
 
 </script>
 
@@ -99,7 +98,7 @@ const showCode = () => (code.value = MetamathGenerator.workspaceToCode(foo.value
       </block>
     </BlocklyComponent> -->
 
-    <BlocklyComponent id="blockly2" :options="options" ref="foo"></BlocklyComponent>
+    <BlocklyComponent id="blockly2" :options="options" ref="blocklyComponent"></BlocklyComponent>
 
     <p id="code">
       <button v-on:click="showCode()">Show JavaScript</button>

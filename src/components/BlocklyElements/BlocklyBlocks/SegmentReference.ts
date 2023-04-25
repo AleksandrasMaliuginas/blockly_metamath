@@ -23,6 +23,10 @@ class SegmentReference implements IBlocklyBlock {
     };
   }
 
+  blockToCode(): string {
+    return "";
+  }
+
   static toolboxInstance(name : string): ToolboxItemInfo {
     return {
       'kind': 'block',

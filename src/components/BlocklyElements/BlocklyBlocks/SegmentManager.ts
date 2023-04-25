@@ -22,10 +22,9 @@ class SegmentManager {
     const segmentReferences = segmentDefinitions
       .map(segmentName => SegmentReference.toolboxInstance(segmentName));
 
-    if (!segmentDefinitions)
+    if (!segmentDefinitions || segmentDefinitions.length === 0)
       return [this.segmentDefinition.toolboxInstance()];
 
-    console.log(segmentReferences)
     return [this.segmentDefinition.toolboxInstance(), ...segmentReferences]
   }
 

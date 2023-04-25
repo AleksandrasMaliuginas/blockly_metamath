@@ -35,6 +35,10 @@ class FloatingHypo implements IBlocklyBlock {
     };
   }
 
+  blockToCode(): string {
+    return "";
+  }
+
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
     block.setFieldValue(this.constant, 'CONST');

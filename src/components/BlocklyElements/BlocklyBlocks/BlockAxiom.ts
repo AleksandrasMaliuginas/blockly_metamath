@@ -8,7 +8,7 @@ import { Constant } from "../../DatabaseParser/MMStatements/Constant";
 import { Variable } from "../../DatabaseParser/MMStatements/Variable";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
 import { IMMStatement } from "../../DatabaseParser/IMMStatement";
-import { MMRenderInfo } from "../../MMBlockRenderer/MMRenderInfo";
+import { MMRenderInfo } from "../../BlockRenderer/MMRenderInfo";
 
 class BlockAxiom implements IBlocklyBlock {
 
@@ -39,6 +39,10 @@ class BlockAxiom implements IBlocklyBlock {
       "kind": "block",
       "type": this.label
     };
+  }
+
+  blockToCode(): string {
+    return "";
   }
 
   private blockInit(block: Block): void {

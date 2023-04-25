@@ -32,6 +32,10 @@ class SegmentDefinition implements IBlocklyBlock {
     };
   }
 
+  blockToCode(): string {
+    return "";
+  }
+
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
     block.onchange = (event) => {

@@ -5,6 +5,8 @@ type BlockDefinitionInicializer = any;
 export interface IBlocklyBlock {
   initializer() : BlockDefinitionInicializer
   toolboxInstance() : ToolboxItemInfo
+
+  blockToCode() : string
 }
 
 export const enum BlockTypes {
