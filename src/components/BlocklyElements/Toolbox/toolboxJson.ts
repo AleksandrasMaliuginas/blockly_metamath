@@ -1,19 +1,23 @@
+import { BlockTypes } from "../IBlocklyBlock";
 
 export const toolboxJson : any = {
   "kind": "categoryToolbox",
   "contents": [
-    // {
-    //   "kind": "category",
-    //   "name": "Constants",
-    //   "colour": 160,
-    //   "custom": "MM_CONSTANTS"
-    // },
-    // {
-    //   "kind": "category",
-    //   "name": "Variables",
-    //   "colour": 330,
-    //   "custom": "MM_VARIABLES"
-    // },
+    {
+      "kind": "sep",
+    },
+    {
+      "kind": "category",
+      "name": "Constants",
+      "colour": 160,
+      "custom": "MM_CONSTANTS"
+    },
+    {
+      "kind": "category",
+      "name": "Variables",
+      "colour": 330,
+      "custom": "MM_VARIABLES"
+    },
     {
       "kind": "sep",
     },
@@ -35,17 +39,17 @@ export const toolboxJson : any = {
       "colour": 60,
       "custom": "MM_BLOCKS"
     },
-    // {
-    //   "kind": "category",
-    //   "name": "Proofs",
-    //   "colour": 20,
-    //   "contents": [
-    //     {
-    //       "kind": "block",
-    //       "type": MM.Proof
-    //     }
-    //   ]
-    // },
+    {
+      "kind": "category",
+      "name": "Proofs",
+      "colour": 20,
+      "contents": [
+        {
+          "kind": "block",
+          "type": BlockTypes.Proof
+        }
+      ]
+    },
     {
       "kind": "sep",
     },

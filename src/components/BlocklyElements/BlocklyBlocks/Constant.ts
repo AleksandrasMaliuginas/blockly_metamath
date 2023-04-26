@@ -1,22 +1,17 @@
 
 import { Block } from "blockly";
-import { IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
+import { Constant as ConstantMMStatement } from "../../DatabaseParser/MMStatements/Constant";
 
-class Proof implements IBlocklyBlock {
+class Constant implements IBlocklyBlock {
 
   private readonly label: string | undefined;
   private readonly originalStatement: string | undefined;
 
-  constructor(parsedStatement?: ProvableAssertion) {
-    
-    if (parsedStatement) {
-      this.label = parsedStatement.label;
-      this.originalStatement = parsedStatement.originalStatement;
-    }
-
-    
+  constructor(parsedStatement: ConstantMMStatement) {
+    this.label = parsedStatement.label;
+    this.originalStatement = parsedStatement.originalStatement;
   }
 
   initializer(): any {
@@ -41,39 +36,32 @@ class Proof implements IBlocklyBlock {
 
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
-    
-
+    block.setFieldValue(this.label, 'CONST');
 
     block.setTooltip(() => {
       return this.originalStatement ? this.originalStatement : "No tooltip provided.";
     });
   }
-
-
 }
 
 const jsonBlockTemplate = {
-  "type": "block_type",
-  "message0": "Label: %1 Assertion: %2 Proof: %3",
+  "type": BlockTypes.Constant,
+  "message0": '%1 %2',
   "args0": [
     {
-      "type": "field_input",
-      "name": "LABEL",
-      "text": "default"
+      "type": "field_label_serializable",
+      "name": "CONST",
+      "text": "NO_LABEL"
     },
     {
       "type": "input_value",
-      "name": "ASSERTION"
-    },
-    {
-      "type": "input_statement",
-      "name": "PROOF"
+      "name": "NEXT",
+      "check": [BlockTypes.Constant, BlockTypes.Variable]
     }
   ],
-  "inputsInline": true,
-  "colour": 20,
-  "tooltip": "",
-  "helpUrl": ""
+  "inputsInline": false,
+  "output": BlockTypes.Constant,
+  "colour": 160
 };
 
-export { Proof }
+export { Constant }

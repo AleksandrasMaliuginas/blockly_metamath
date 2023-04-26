@@ -1,4 +1,4 @@
-import { Blocks, Generator } from "blockly";
+import { Block, Blocks, Generator } from "blockly";
 import { IMMStatement } from "../DatabaseParser/IMMStatement";
 import { FloatingHypo } from "./BlocklyBlocks/FloatingHypo";
 import { VariableHypothesis } from "../DatabaseParser/MMStatements/VariableHypothesis";
@@ -9,6 +9,11 @@ import { Axiom } from "./BlocklyBlocks/Axiom";
 import { ScopingBlock } from "../DatabaseParser/MMStatements/ScopingBlock";
 import { BlockAxiom } from "./BlocklyBlocks/BlockAxiom";
 import { SegmentManager } from "./BlocklyBlocks/SegmentManager";
+import { Proof } from "./BlocklyBlocks/Proof";
+import { Variable as VariableMMStatement } from "../DatabaseParser/MMStatements/Variable";
+import { Constant as ConstantMMStatement } from "../DatabaseParser/MMStatements/Constant";
+import { Constant } from "./BlocklyBlocks/Constant";
+import { Variable } from "./BlocklyBlocks/Variable";
 
 interface IBlockRegistry {
   mmStatements(mm_statement_list : IMMStatement[]) : void
@@ -26,6 +31,7 @@ class BlockRegistry implements IBlockRegistry {
     this.segmentManager = segmentManager;
     this.codeGenerator = codeGenerator as any;
     this.defineSegmentBlocks();
+    this.defineEmptyProof();
   }
 
   public mmStatements(mm_statement_list: IMMStatement[]): void {
@@ -38,6 +44,11 @@ class BlockRegistry implements IBlockRegistry {
     Blocks[BlockTypes.SegmentRef] = this.segmentManager.segmentReferenceBlock();
     this.codeGenerator[BlockTypes.SegmentDef] = () => "";
     this.codeGenerator[BlockTypes.SegmentRef] = () => "";
+  }
+
+  private defineEmptyProof() : void {
+    const emptyProof = new Proof();
+    Blocks[BlockTypes.Proof] = emptyProof.initializer();
   }
 
   private createBlocklyElement = (mmStatement : IMMStatement, index : number) => {
@@ -67,6 +78,14 @@ class BlockRegistry implements IBlockRegistry {
 
     if (mmStatement instanceof ScopingBlock) {
       return new BlockAxiom(mmStatement, statementContext);
+    }
+
+    if (mmStatement instanceof ConstantMMStatement) {
+      return new Constant(mmStatement);
+    }
+
+    if (mmStatement instanceof VariableMMStatement) {
+      return new Variable(mmStatement);
     }
 
     return undefined;

@@ -83,7 +83,9 @@ const jsonBlockTemplate = {
   "inputsInline": true,
   "output": BlockType.Axiom,
   "colour": 210,
-  // "mutator": MM.Axiom + '_mutator'
+
+  "previousStatement": null,
+  "nextStatement": null,
 };
 
 export { Axiom }

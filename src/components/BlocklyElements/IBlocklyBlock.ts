@@ -10,8 +10,8 @@ export interface IBlocklyBlock {
 }
 
 export const enum BlockTypes {
-  // Constant = 'MMConstant',
-  // Variable = 'MMVariable',
+  Constant = 'MMConstant',
+  Variable = 'MMVariable',
   FloatingHypo = 'MMFloatingHypo',
   Axiom = 'MMAxiom',
   // EssentialHypo = 'MMEssentialHypo',
