@@ -9,7 +9,7 @@ class MMRenderer extends Blockly.geras.Renderer {
     super(RENDERER_NAME);
   }
 
-  makeRenderInfo_(block : BlockSvg) : Blockly.geras.RenderInfo {
+  override makeRenderInfo_(block : BlockSvg) : Blockly.geras.RenderInfo {
     return new MMRenderInfo(this, block);
   }
 }
