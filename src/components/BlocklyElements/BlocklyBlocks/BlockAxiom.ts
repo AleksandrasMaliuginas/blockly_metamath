@@ -1,28 +1,36 @@
 
 import { Block } from "blockly";
-import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
+import { IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { StatementContext } from "../BlockRegistry";
-import { Keywords } from "../../DatabaseParser/MM";
-import { Constant } from "../../DatabaseParser/MMStatements/Constant";
-import { Variable } from "../../DatabaseParser/MMStatements/Variable";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
 import { IMMStatement } from "../../DatabaseParser/IMMStatement";
-import { MMRenderInfo } from "../../BlockRenderer/MMRenderInfo";
+import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
+import { MultiLineField } from "../../BlockRenderer/MultiLineFieldLabel";
+import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 
 class BlockAxiom implements IBlocklyBlock {
 
+  readonly type: string | null;
   private readonly label: string | undefined;
   private readonly originalStatement: string | undefined;
 
-  private readonly innerStatements: IMMStatement[] | undefined;
+  private readonly innerStatements: IMMStatement[] = [];
   private readonly context : StatementContext;
+
+  private readonly expectedStatements : IMMStatement[] = [];
+  private readonly resultingStatement : AxiomaticAssertion | ProvableAssertion;
 
   constructor(parsedStatement: ScopingBlock, context : StatementContext) {
     this.label = parsedStatement.label;
     this.originalStatement = parsedStatement.originalStatement;
     this.innerStatements = parsedStatement.statements;
     this.context = context;
+
+    this.resultingStatement = parsedStatement.statements[parsedStatement.statements.length - 1] as AxiomaticAssertion;
+    this.type = this.resultingStatement.constant ? this.resultingStatement.constant : null;
+
+    this.expectedStatements = this.buildExpectedStatements();
   }
 
   initializer(): any {
@@ -46,53 +54,46 @@ class BlockAxiom implements IBlocklyBlock {
   }
 
   private blockInit(block: Block): void {
-    block.jsonInit(jsonBlockTemplate);
-    
-    this.initInnerStatements(block);
+    // Init expected hypos
+    const expectedStatementDescriptors : string[] = [];
+    this.expectedStatements.forEach(st => {
+      if (st.mathSymbols) {
+        expectedStatementDescriptors.push(st.mathSymbols.join(' '));
+      }
+    });
 
+    const field = new MultiLineField(expectedStatementDescriptors.join(MultiLineField.NEW_LINE_INDICATOR));
+    block.appendStatementInput("INPUT").appendField(field);
+
+    block.appendDummyInput('RESULT').appendField(this.resultingStatement.mathSymbols.join(' '))
+
+    block.setColour(this.context.getHueColor(this.type));
     block.setTooltip(() => {
       return this.originalStatement ? this.originalStatement : "No tooltip provided.";
     });
   }
 
-  private initInnerStatements(block: Block) {
-    const statementCount = this.innerStatements ? this.innerStatements.length : 0;
+  private buildExpectedStatements() : IMMStatement[] {
+    const variables : IMMStatement[] = [];
+    const statements : IMMStatement[] = [];
 
-    this.innerStatements?.forEach((statement, statementIndex) => {
-      statement.mathSymbols?.forEach((symbol, index) => {
-          if (this.isConstant(symbol)) {
-            block.appendDummyInput(`${statement.label}.C${index}`).appendField(symbol);
-          }
+    this.innerStatements.forEach((statement, index) => {
+      // Skip last statement
+      if (index === this.innerStatements.length - 1) return;
 
-          if (this.isVariable(symbol)) {
-            block.appendValueInput(`${statement.label}.V${index}`);
-          }
+      statement.mathSymbols?.forEach(symbol => {
+        const variableHypo = this.context.getFloatingHypothesis(symbol);
+
+        if (variableHypo && !variables.includes(variableHypo)) {
+          variables.push(variableHypo);
+        }
       });
 
-      if (statementIndex < statementCount - 1) {
-        block.appendDummyInput(MMRenderInfo.NEW_LINE_INDICATOR)
-      }
+      statements.push(statement);
     });
-  }
 
-  // TODO: Leaking logic | Context should be in the Database parser
-  private isConstant(symbol : string) {
-    return this.context.mmStatements.some(statement => statement.label === symbol && statement.keyword === Keywords.CONSTANT);
-  }
-
-  private isVariable(symbol : string) {
-    return this.context.mmStatements.some(statement => statement.label === symbol && statement.keyword === Keywords.VARIABLE);
+    return [...variables, ...statements];
   }
 }
-
-const jsonBlockTemplate = {
-  "type": BlockType.Block,
-  "message0": '',
-  "args0": [],
-  "inputsInline": true,
-  "output": BlockType.Axiom,
-  "colour": 210,
-  // "mutator": MM.Axiom + '_mutator'
-};
 
 export { BlockAxiom }

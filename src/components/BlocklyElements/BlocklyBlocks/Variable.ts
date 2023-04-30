@@ -6,6 +6,7 @@ import { Constant as ConstantMMStatement } from "../../DatabaseParser/MMStatemen
 
 class Variable implements IBlocklyBlock {
 
+  readonly type: string | null = null;
   private readonly label: string | undefined;
   private readonly originalStatement: string | undefined;
 

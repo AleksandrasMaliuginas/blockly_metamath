@@ -10,13 +10,10 @@ class Proof implements IBlocklyBlock {
   private readonly originalStatement: string | undefined;
 
   constructor(parsedStatement?: ProvableAssertion) {
-    
     if (parsedStatement) {
       this.label = parsedStatement.label;
       this.originalStatement = parsedStatement.originalStatement;
     }
-
-    
   }
 
   initializer(): any {
@@ -42,8 +39,6 @@ class Proof implements IBlocklyBlock {
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
     
-
-
     block.setTooltip(() => {
       return this.originalStatement ? this.originalStatement : "No tooltip provided.";
     });

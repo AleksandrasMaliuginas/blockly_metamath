@@ -7,6 +7,7 @@ import { Keywords, WHITESPACE } from "../MM";
 class VariableHypothesis implements IMMStatement {
   label: string | undefined;
   keyword: string | undefined;
+  mathSymbols: string[] | undefined;
   originalStatement: string | undefined;
 
   constant: string | undefined;
@@ -18,7 +19,9 @@ class VariableHypothesis implements IMMStatement {
 
     const params = this.originalStatement.split(WHITESPACE);
     this.label = params[0];
-    this.keyword = params[1];
+    this.keyword = Keywords.VARIABLE_HYPOTHESIS;
+
+    this.mathSymbols = params.slice(2, -1);
     this.constant = params[2];
     this.variable = params[3];
 

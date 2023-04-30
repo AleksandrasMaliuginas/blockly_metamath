@@ -3,6 +3,8 @@ import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 type BlockDefinitionInicializer = any;
 
 export interface IBlocklyBlock {
+  readonly type: string | null;
+
   initializer() : BlockDefinitionInicializer
   toolboxInstance() : ToolboxItemInfo
 

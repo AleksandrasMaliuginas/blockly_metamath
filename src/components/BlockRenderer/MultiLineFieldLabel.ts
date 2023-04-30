@@ -33,9 +33,9 @@ class MultiLineFieldLabel extends FieldLabel {
 
     const lines = text.split(MultiLineFieldLabel.NEW_LINE_INDICATOR);
     let dy = 0;
-    lines.forEach(line => {
+    lines.forEach((line, index) => {
       const tspanElement = Blockly.utils.dom.createSvgElement(Blockly.utils.Svg.TSPAN, { 'dy': dy, 'x': 0 }, this.textElement_);
-      dy = this.getConstants()!.FIELD_TEXT_HEIGHT;
+      dy = this.getConstants()!.FIELD_TEXT_HEIGHT + 5;
 
       tspanElement.appendChild(document.createTextNode(line));
     });
@@ -67,7 +67,7 @@ class MultiLineFieldLabel extends FieldLabel {
     if (this.borderRect_ && lines.length <= 1) {
       totalHeight = Math.max(totalHeight, constants!.FIELD_BORDER_RECT_HEIGHT);
     } else {
-      totalHeight = constants!.FIELD_TEXT_HEIGHT * lines.length;
+      totalHeight = (constants!.FIELD_TEXT_HEIGHT + 5) * lines.length;
     }
 
     this.size_.height = totalHeight;
