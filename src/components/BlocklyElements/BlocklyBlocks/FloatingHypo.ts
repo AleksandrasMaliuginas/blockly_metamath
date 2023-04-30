@@ -3,20 +3,25 @@ import { Block } from "blockly";
 import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
 import { VariableHypothesis } from "../../DatabaseParser/MMStatements/VariableHypothesis";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
+import { StatementContext } from "../BlockRegistry";
 
 class FloatingHypo implements IBlocklyBlock {
 
+  readonly type: string | null;
   private readonly label: string | undefined;
   private readonly originalStatement: string | undefined;
   private readonly constant: string | undefined;
   private readonly variable: string | undefined;
+  private readonly context: StatementContext;
 
-  constructor(parsedStatement: VariableHypothesis) {
+  constructor(parsedStatement: VariableHypothesis, context : StatementContext) {
+    this.type = parsedStatement.constant ? parsedStatement.constant : null;
     this.label = parsedStatement.label;
     this.originalStatement = parsedStatement.originalStatement;
 
     this.constant = parsedStatement.constant;
     this.variable = parsedStatement.variable;
+    this.context = context;
   }
 
   initializer(): any {
@@ -41,9 +46,10 @@ class FloatingHypo implements IBlocklyBlock {
 
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
-    block.setFieldValue(this.constant, 'CONST');
+    // block.setFieldValue(this.constant, 'CONST');
     block.setFieldValue(this.variable, 'VAR');
 
+    block.setColour(this.context.getHueColor())
     block.setTooltip(() => {
       return this.originalStatement ? this.originalStatement : "No tooltip provided.";
     });
@@ -52,13 +58,13 @@ class FloatingHypo implements IBlocklyBlock {
 
 const jsonBlockTemplate = {
   "type": BlockType.FloatingHypo,
-  "message0": '%1 %2',
+  "message0": '%1', // '%1 %2',
   "args0": [
-    {
-      "type": "field_label_serializable",
-      "name": "CONST",
-      "text": "NO_LABEL"
-    },
+    // {
+    //   "type": "field_label_serializable",
+    //   "name": "CONST",
+    //   "text": ""
+    // },
     {
       "type": "field_label_serializable",
       "name": "VAR",
