@@ -1,9 +1,12 @@
 
 export interface IMMStatement {
-  label: string | undefined;
-  keyword: string | undefined;
-  originalStatement: string | undefined;
-  mathSymbols: string[] | undefined;
+  label: string;
+  keyword: string;
+  mathSymbols: string[];
+
+  originalStatement: string;
+
+  context: IMMStatement[];
 
   /**
    * Parse statement starting at 'startIndex'.
@@ -11,5 +14,5 @@ export interface IMMStatement {
    * @param startIndex Start index of a statement
    * @returns End index of a parsed statement
    */
-  parse(databaseString : string, startIndex : number) : number;
+  parse(databaseString: string, startIndex: number): number;
 }

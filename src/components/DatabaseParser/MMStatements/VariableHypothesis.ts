@@ -5,13 +5,15 @@ import { Keywords, WHITESPACE } from "../MM";
  * Variable-type (“floating”) hypothesis
  */
 class VariableHypothesis implements IMMStatement {
-  label: string | undefined;
-  keyword: string | undefined;
-  mathSymbols: string[] | undefined;
-  originalStatement: string | undefined;
+  label: string;
+  keyword: string = Keywords.VARIABLE_HYPOTHESIS;
+  mathSymbols: string[];
+  originalStatement: string;
 
-  constant: string | undefined;
-  variable: string | undefined;
+  context: IMMStatement[] = [];
+
+  constant: string;
+  variable: string;
 
   parse(dbStr: string, startIndex: number): number {
     const endIdx = dbStr.indexOf(Keywords.END_OF_STATEMENT, startIndex) + 2;
@@ -19,7 +21,6 @@ class VariableHypothesis implements IMMStatement {
 
     const params = this.originalStatement.split(WHITESPACE);
     this.label = params[0];
-    this.keyword = Keywords.VARIABLE_HYPOTHESIS;
 
     this.mathSymbols = params.slice(2, -1);
     this.constant = params[2];

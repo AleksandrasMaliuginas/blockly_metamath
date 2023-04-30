@@ -2,13 +2,14 @@ import { IMMStatement } from "../IMMStatement";
 import { Keywords, WHITESPACE } from "../MM";
 
 class ProvableAssertion implements IMMStatement {
-  label: string | undefined;
-  keyword: string | undefined;
-  originalStatement: string | undefined;
+  label: string;
+  keyword: string = Keywords.PROOVABLE_ASSERTION;
+  mathSymbols: string[];
+  originalStatement: string;
 
-  constant: string | undefined;
-  mathSymbols: string[] = [];
+  context: IMMStatement[] = [];
 
+  constant: string;
   proofLabels: string[] = [];
 
   parse(dbStr: string, startIndex: number): number {
@@ -18,10 +19,9 @@ class ProvableAssertion implements IMMStatement {
 
     const assertion = dbStr.slice(startIndex, startOfProofIdx).trim().split(WHITESPACE);
     this.label = assertion[0];
-    this.keyword = assertion[1];
     this.constant = assertion[2]
     this.mathSymbols = assertion.slice(2, -1);
-    
+
     const proof = dbStr.slice(startOfProofIdx, endIdx).trim().split(WHITESPACE);
     this.proofLabels = proof.slice(0, -1);
 
