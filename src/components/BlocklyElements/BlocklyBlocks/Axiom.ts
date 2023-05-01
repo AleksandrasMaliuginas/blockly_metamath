@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { StatementContext } from "../BlockRegistry";
@@ -20,7 +20,7 @@ class Axiom implements IBlocklyBlock {
     this.originalStatement = parsedStatement.originalStatement;
 
     this.type = parsedStatement.mathSymbols ? parsedStatement.mathSymbols[0] : null;
-    this.mathSymbols = parsedStatement.mathSymbols.slice(1);
+    this.mathSymbols = parsedStatement.mathSymbols;
     this.context = context;
   }
 
@@ -78,11 +78,11 @@ class Axiom implements IBlocklyBlock {
 }
 
 const jsonBlockTemplate = {
-  "type": BlockType.Axiom,
+  "type": BlockTypes.Axiom,
   "message0": '',
   "args0": [],
   "inputsInline": true,
-  "output": BlockType.Axiom,
+  "output": BlockTypes.Axiom,
   "colour": 210,
 
   "previousStatement": null,

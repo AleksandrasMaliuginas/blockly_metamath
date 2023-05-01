@@ -1,6 +1,6 @@
 
 import { WorkspaceSvg } from "blockly";
-import { BlockTypes as BlockType } from "../IBlocklyBlock";
+import { BlockTypes } from "../IBlocklyBlock";
 import { SegmentDefinition } from "./SegmentDefinition";
 import { SegmentReference } from "./SegmentReference";
 
@@ -16,7 +16,7 @@ class SegmentManager {
   }
 
   public toolboxCallback(workspace : WorkspaceSvg) : any {
-    const segmentDefinitions = workspace?.getBlocksByType(BlockType.SegmentDef, false)
+    const segmentDefinitions = workspace?.getBlocksByType(BlockTypes.SegmentDef, false)
       .map(segmentBlock => segmentBlock.getFieldValue("NAME"));
 
     const segmentReferences = segmentDefinitions

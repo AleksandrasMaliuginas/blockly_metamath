@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 
 class SegmentReference implements IBlocklyBlock {
@@ -19,7 +19,7 @@ class SegmentReference implements IBlocklyBlock {
   toolboxInstance(): ToolboxItemInfo {
     return {
       "kind": "block",
-      "type": BlockType.SegmentRef
+      "type": BlockTypes.SegmentRef
     };
   }
 
@@ -30,7 +30,7 @@ class SegmentReference implements IBlocklyBlock {
   static toolboxInstance(name : string): ToolboxItemInfo {
     return {
       'kind': 'block',
-      'type': BlockType.SegmentRef,
+      'type': BlockTypes.SegmentRef,
       'fields': {
         'NAME': name,
       }
@@ -43,7 +43,7 @@ class SegmentReference implements IBlocklyBlock {
 }
 
 const jsonBlockTemplate = {
-  "type": BlockType.SegmentRef,
+  "type": BlockTypes.SegmentRef,
   "message0": "%1",
   "args0": [
     {

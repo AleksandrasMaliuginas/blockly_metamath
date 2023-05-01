@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { StatementContext } from "../BlockRegistry";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
@@ -95,5 +95,17 @@ class BlockAxiom implements IBlocklyBlock {
     return [...variables, ...statements];
   }
 }
+
+const jsonBlockTemplate = {
+  "type": BlockTypes.Axiom,
+  "message0": '',
+  "args0": [],
+  "inputsInline": true,
+  "output": BlockTypes.Axiom,
+  "colour": 210,
+
+  "previousStatement": null,
+  "nextStatement": null,
+};
 
 export { BlockAxiom }

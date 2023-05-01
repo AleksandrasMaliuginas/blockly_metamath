@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 
@@ -48,7 +48,7 @@ class Proof implements IBlocklyBlock {
 }
 
 const jsonBlockTemplate = {
-  "type": "block_type",
+  "type": BlockTypes.Proof,
   "message0": "Label: %1 Assertion: %2 Proof: %3",
   "args0": [
     {

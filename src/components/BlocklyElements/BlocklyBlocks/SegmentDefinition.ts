@@ -1,6 +1,6 @@
 
 import { Block, Events, WorkspaceSvg } from "blockly";
-import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { BlockChange } from "blockly/core/events/events_block_change";
 import { BlockCreate } from "blockly/core/events/events_block_create";
@@ -28,7 +28,7 @@ class SegmentDefinition implements IBlocklyBlock {
   toolboxInstance(): ToolboxItemInfo {
     return {
       "kind": "block",
-      "type": BlockType.SegmentDef
+      "type": BlockTypes.SegmentDef
     };
   }
 
@@ -55,7 +55,7 @@ class SegmentDefinition implements IBlocklyBlock {
 
   private onSelect(event : Selected, block : Block) : void {
     if (event.newElementId === block.id) {
-      this.selectedReferences = this.workspace.getBlocksByType(BlockType.SegmentRef, false)
+      this.selectedReferences = this.workspace.getBlocksByType(BlockTypes.SegmentRef, false)
         .filter(ref => ref.getFieldValue(NAME_FIELD) === block.getFieldValue(NAME_FIELD));
     }
   }
@@ -80,7 +80,7 @@ class SegmentDefinition implements IBlocklyBlock {
 
   private definitionExists(block: Block): boolean {
     return this.workspace
-      .getBlocksByType(BlockType.SegmentDef, false)
+      .getBlocksByType(BlockTypes.SegmentDef, false)
       .some(other =>
         other.id !== block.id && 
         other.getFieldValue(NAME_FIELD) === block.getFieldValue(NAME_FIELD)
@@ -91,7 +91,7 @@ class SegmentDefinition implements IBlocklyBlock {
 const NAME_FIELD = "NAME";
 
 const jsonBlockTemplate = {
-  "type": BlockType.SegmentDef,
+  "type": BlockTypes.SegmentDef,
   "message0": "%1 %2",
   "args0": [
     {

@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { BlockTypes as BlockType, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
 import { VariableHypothesis } from "../../DatabaseParser/MMStatements/VariableHypothesis";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { StatementContext } from "../BlockRegistry";
@@ -46,7 +46,7 @@ class FloatingHypo implements IBlocklyBlock {
 
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
-    // block.setFieldValue(this.constant, 'CONST');
+    block.setFieldValue(this.constant, 'CONST');
     block.setFieldValue(this.variable, 'VAR');
 
     block.setColour(this.context.getHueColor())
@@ -57,21 +57,21 @@ class FloatingHypo implements IBlocklyBlock {
 }
 
 const jsonBlockTemplate = {
-  "type": BlockType.FloatingHypo,
-  "message0": '%1', // '%1 %2',
+  "type": BlockTypes.FloatingHypo,
+  "message0": '%1 %2',
   "args0": [
-    // {
-    //   "type": "field_label_serializable",
-    //   "name": "CONST",
-    //   "text": ""
-    // },
+    {
+      "type": "field_label_serializable",
+      "name": "CONST",
+      "text": ""
+    },
     {
       "type": "field_label_serializable",
       "name": "VAR",
       "text": "NO_LABEL"
     },
   ],
-  "output": BlockType.FloatingHypo,
+  "output": BlockTypes.FloatingHypo,
   "colour": 230,
 };
 
