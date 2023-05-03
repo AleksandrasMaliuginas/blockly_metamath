@@ -1,7 +1,7 @@
 import { WorkspaceSvg } from "blockly"
 import { toolboxJson } from "./toolboxJson";
 import { FloatingHypo } from "../BlocklyBlocks/FloatingHypo";
-import { IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockDescriptor } from "../IBlocklyBlock";
 import { Axiom } from "../BlocklyBlocks/Axiom";
 import { BlockAxiom } from "../BlocklyBlocks/BlockAxiom";
 import { SegmentManager } from "../BlocklyBlocks/SegmentManager";
@@ -12,7 +12,7 @@ class ToolboxBuilder {
   
   private readonly blockList : any[];
   // TODO: is workspace realy a Toolbox builder dependency
-  private readonly targetWorkspace : WorkspaceSvg;
+  public readonly targetWorkspace : WorkspaceSvg;
   private readonly segmentManager : SegmentManager;
 
   constructor (workspace : WorkspaceSvg, segmentManager : SegmentManager) {
@@ -22,7 +22,7 @@ class ToolboxBuilder {
     this.segmentManager = segmentManager;
   }
 
-  addBlock(block : IBlocklyBlock) : void {
+  addBlock(block : BlockDescriptor) : void {
     this.blockList.push(block);
   }
 
@@ -55,7 +55,7 @@ class ToolboxBuilder {
   private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback(workspace);
 
   private getBlocksByObjectType = (classtype : any) => {
-    return this.blockList.reduce((arr, block : IBlocklyBlock) => {
+    return this.blockList.reduce((arr, block : BlockDescriptor) => {
       if (block instanceof classtype) {
         arr.push(block.toolboxInstance());
       }

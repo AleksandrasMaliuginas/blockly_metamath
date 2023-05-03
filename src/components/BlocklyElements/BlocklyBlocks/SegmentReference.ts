@@ -1,9 +1,9 @@
 
 import { Block } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 
-class SegmentReference implements IBlocklyBlock {
+class SegmentReference implements BlockDescriptor {
 
   constructor() { }
 

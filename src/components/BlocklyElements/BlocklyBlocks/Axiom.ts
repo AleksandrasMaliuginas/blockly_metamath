@@ -1,21 +1,22 @@
-
-import { Block } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { WorkspaceSvg } from "blockly";
+import { BlockDescriptor, ExtendedBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { StatementContext } from "../BlockRegistry";
-import { Keywords } from "../../DatabaseParser/MM";
+import { AxiomSvg } from "./AxiomSvg";
+// import { duplicate } from "blockly/core/clipboard";
 
-class Axiom implements IBlocklyBlock {
+
+class Axiom implements BlockDescriptor {
 
   public readonly type: string | null;
-  private readonly label: string | undefined;
-  private readonly originalStatement: string | undefined;
+  private readonly label: string;
+  public readonly originalStatement: string | undefined;
 
-  private readonly mathSymbols: string[] | undefined;
-  private readonly context: StatementContext;
+  public readonly mathSymbols: string[] | undefined;
+  public readonly context: StatementContext;
 
-  constructor(parsedStatement: AxiomaticAssertion, context: StatementContext) {
+  constructor(parsedStatement: AxiomaticAssertion, context: StatementContext, workspace: WorkspaceSvg) {
     this.label = parsedStatement.label;
     this.originalStatement = parsedStatement.originalStatement;
 
@@ -23,17 +24,19 @@ class Axiom implements IBlocklyBlock {
     this.mathSymbols = parsedStatement.mathSymbols;
     this.context = context;
   }
+  
+  initializer(): ExtendedBlocklyBlock {
+    const descriptor = this;
 
-  initializer(): any {
-    const thisObject = this;
     return {
       init: function () {
-        thisObject.blockInit(this);
+        this.mmBlock = new AxiomSvg(this, descriptor);
+        this.mmBlock?.init();
       }
     };
   }
 
-  toolboxInstance() : ToolboxItemInfo {
+  toolboxInstance(): ToolboxItemInfo {
     return {
       "kind": "block",
       "type": this.label
@@ -43,50 +46,6 @@ class Axiom implements IBlocklyBlock {
   blockToCode(): string {
     return "";
   }
-
-  private blockInit(block: Block): void {
-    block.jsonInit(jsonBlockTemplate);
-
-    this.mathSymbols?.forEach((symbol, index) => {
-
-      if (this.isConstant(symbol)) {
-        block.appendDummyInput(`C${index}`).appendField(symbol);
-      }
-
-      if (this.isVariable(symbol)) {
-        block.appendValueInput(`V${index}`);
-        // .setCheck([MM.Variable, MM.FloatingHypo, MM.Axiom]);
-      }
-    });
-
-    block.setTooltip(() => {
-      return this.originalStatement ? this.originalStatement : "No tooltip provided.";
-    });
-
-    block.setColour(this.context.getHueColor())
-  }
-
-
-  // TODO: Leaking logic | Context should be in the Database parser
-  private isConstant(symbol: string) {
-    return this.context.mmStatements.some(statement => statement.label === symbol && statement.keyword === Keywords.CONSTANT);
-  }
-
-  private isVariable(symbol: string) {
-    return this.context.mmStatements.some(statement => statement.label === symbol && statement.keyword === Keywords.VARIABLE);
-  }
 }
-
-const jsonBlockTemplate = {
-  "type": BlockTypes.Axiom,
-  "message0": '',
-  "args0": [],
-  "inputsInline": true,
-  "output": BlockTypes.Axiom,
-  "colour": 210,
-
-  "previousStatement": null,
-  "nextStatement": null,
-};
 
 export { Axiom }

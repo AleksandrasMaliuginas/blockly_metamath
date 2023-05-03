@@ -1,14 +1,26 @@
+import { Block } from "blockly";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 
 type BlockDefinitionInicializer = any;
 
-export interface IBlocklyBlock {
+export type ExtendedBlocklyBlock = {
+  init?: () => void,
+  mmBlock?: MMBlock,
+} & Block // &Block  it is an option but not everywhere
+
+export interface MMBlock {
+  readonly descriptor: BlockDescriptor;
+
+  init(): void
+}
+
+export interface BlockDescriptor {
   readonly type: string | null;
 
-  initializer() : BlockDefinitionInicializer
-  toolboxInstance() : ToolboxItemInfo
+  initializer(): BlockDefinitionInicializer
+  toolboxInstance(): ToolboxItemInfo
 
-  blockToCode() : string
+  blockToCode(): string
 }
 
 export const enum BlockTypes {

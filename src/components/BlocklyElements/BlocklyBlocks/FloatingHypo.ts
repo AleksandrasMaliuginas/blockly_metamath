@@ -1,11 +1,11 @@
 
 import { Block } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { VariableHypothesis } from "../../DatabaseParser/MMStatements/VariableHypothesis";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { StatementContext } from "../BlockRegistry";
 
-class FloatingHypo implements IBlocklyBlock {
+class FloatingHypo implements BlockDescriptor {
 
   readonly type: string | null;
   private readonly label: string | undefined;

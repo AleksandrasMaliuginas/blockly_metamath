@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { StatementContext } from "../BlockRegistry";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
@@ -9,7 +9,7 @@ import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticA
 import { MultiLineField } from "../../BlockRenderer/MultiLineFieldLabel";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 
-class BlockAxiom implements IBlocklyBlock {
+class BlockAxiom implements BlockDescriptor {
 
   readonly type: string | null;
   private readonly label: string | undefined;

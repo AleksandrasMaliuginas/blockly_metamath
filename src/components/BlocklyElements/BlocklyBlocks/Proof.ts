@@ -1,10 +1,10 @@
 
 import { Block } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 
-class Proof implements IBlocklyBlock {
+class Proof implements BlockDescriptor {
 
   private readonly label: string | undefined;
   private readonly originalStatement: string | undefined;

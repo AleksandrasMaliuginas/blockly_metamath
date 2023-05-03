@@ -1,12 +1,12 @@
 
 import { Block, Events, WorkspaceSvg } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { BlockChange } from "blockly/core/events/events_block_change";
 import { BlockCreate } from "blockly/core/events/events_block_create";
 import { Selected } from "blockly/core/events/events_selected";
 
-class SegmentDefinition implements IBlocklyBlock {
+class SegmentDefinition implements BlockDescriptor {
 
   private readonly workspace: WorkspaceSvg;
   // TODO: should be replaced with activeReferences (active in workspace)

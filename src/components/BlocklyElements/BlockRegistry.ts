@@ -2,7 +2,7 @@ import { Blocks, Generator } from "blockly";
 import { IMMStatement } from "../DatabaseParser/IMMStatement";
 import { FloatingHypo } from "./BlocklyBlocks/FloatingHypo";
 import { VariableHypothesis } from "../DatabaseParser/MMStatements/VariableHypothesis";
-import { BlockTypes, IBlocklyBlock } from "./IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "./IBlocklyBlock";
 import { ToolboxBuilder } from "./Toolbox/ToolboxBuilder";
 import { AxiomaticAssertion } from "../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { Axiom } from "./BlocklyBlocks/Axiom";
@@ -67,13 +67,13 @@ class BlockRegistry implements IBlockRegistry {
     }
   }
 
-  private getBlocklyBlock(mmStatement : IMMStatement, statementContext : StatementContext) : IBlocklyBlock | undefined {
+  private getBlocklyBlock(mmStatement : IMMStatement, statementContext : StatementContext) : BlockDescriptor | undefined {
     if (mmStatement instanceof VariableHypothesis) {
       return new FloatingHypo(mmStatement, statementContext);
     }
 
     if (mmStatement instanceof AxiomaticAssertion) {
-      return new Axiom(mmStatement, statementContext);
+      return new Axiom(mmStatement, statementContext, this.toolboxBuilder.targetWorkspace);
     }
 
     if (mmStatement instanceof ScopingBlock) {
@@ -131,15 +131,15 @@ class StatementContext {
     return color ? color : 0;
   }
 
-  // public getDefinitionOf(symbol : string, opt_withContext : boolean = true) : IMMStatement | undefined {
-  //   const beginIndex = opt_withContext ? this.currentLevel : this.mmStatements.length - 1;
+  public getDefinitionOf(symbol : string, opt_withContext : boolean = true) : IMMStatement | undefined {
+    const beginIndex = opt_withContext ? this.currentLevel : this.mmStatements.length - 1;
 
-  //   for (let i = beginIndex; i >= 0; i--) {
-  //     if (symbol === this.mmStatements[i].label) {
-  //       return this.mmStatements[i];
-  //     }
-  //   }
-  // }
+    for (let i = beginIndex; i >= 0; i--) {
+      if (symbol === this.mmStatements[i].label) {
+        return this.mmStatements[i];
+      }
+    }
+  }
 
   public getFloatingHypothesis(symbol : string) : IMMStatement | undefined {
     return this.mmStatements.find(st => st instanceof VariableHypothesis && st.variable === symbol);

@@ -1,10 +1,10 @@
 
 import { Block } from "blockly";
-import { BlockTypes, IBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { Constant as ConstantMMStatement } from "../../DatabaseParser/MMStatements/Constant";
 
-class Constant implements IBlocklyBlock {
+class Constant implements BlockDescriptor {
 
   readonly type: string | null = null;
   private readonly label: string | undefined;
