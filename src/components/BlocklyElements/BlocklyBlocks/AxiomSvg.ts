@@ -1,10 +1,9 @@
-import { Block, Events } from "blockly";
+import { Block } from "blockly";
 import { BlockTypes, ExtendedBlocklyBlock, MMBlock } from "../IBlocklyBlock";
 import { BindedInput } from "../BindedInput";
 import { Axiom } from "./Axiom";
 import { Variable } from "../../DatabaseParser/MMStatements/Variable";
 import { Constant } from "../../DatabaseParser/MMStatements/Constant";
-import { BlockMove } from "blockly/core/events/events";
 
 class AxiomSvg implements MMBlock {
 
@@ -21,7 +20,7 @@ class AxiomSvg implements MMBlock {
       const definition = this.descriptor.context.getDefinitionOf(symbol);
 
       if (definition instanceof Variable) {
-        this.inputs.set(definition.label, new BindedInput(definition.label));
+        this.inputs.set(definition.label, new BindedInput(definition.label, block));
       }
     });
   }
@@ -46,36 +45,11 @@ class AxiomSvg implements MMBlock {
       }
     });
 
-    this.block.setOnChange(event => {
-      if (event.type === Events.BLOCK_MOVE) {
-        this.onStatementInput(event as BlockMove)
-      }
-    });
-
     this.block.setTooltip(() => {
       return this.descriptor.originalStatement ? this.descriptor.originalStatement : "No tooltip provided.";
     });
 
     this.block.setColour(this.descriptor.context.getHueColor())
-  }
-
-  private onStatementInput(event: BlockMove) {
-
-    if (!event.newParentId || !event.newInputName) return;
-
-    const targetBlock = event.getEventWorkspace_().getBlockById(event.newParentId);
-    const targetInput = targetBlock?.inputList.find(i => i.name === event.newInputName);
-
-    if (targetBlock?.id !== this.block.id) return;
-
-    const inputBlock = event.getEventWorkspace_().getBlockById(event.blockId ? event.blockId : '');
-
-    if (!targetInput) return;
-
-    const name = BindedInput.getBindedInputName(targetInput);
-    const bindedInput = this.inputs.get(name);
-
-    bindedInput?.update(inputBlock as ExtendedBlocklyBlock)
   }
 }
 
