@@ -1,6 +1,5 @@
 import { WorkspaceSvg } from "blockly"
 import { toolboxJson } from "./toolboxJson";
-import { FloatingHypo } from "../BlocklyBlocks/FloatingHypo";
 import { BlockDescriptor } from "../IBlocklyBlock";
 import { Axiom } from "../BlocklyBlocks/Axiom";
 import { BlockAxiom } from "../BlocklyBlocks/BlockAxiom";
@@ -8,10 +7,11 @@ import { SegmentManager } from "../BlocklyBlocks/SegmentManager";
 import { Constant } from "../BlocklyBlocks/Constant";
 import { Variable } from "../BlocklyBlocks/Variable";
 import { BlockFinder } from "../../BlockFinder";
+import { FloatingHypoDescriptor } from "../BlocklyBlocks/FloatingHypoDescriptor";
 
 class ToolboxBuilder {
 
-  private readonly blockList: any[];
+   readonly blockList: any[];
   // TODO: is workspace realy a Toolbox builder dependency
   public readonly targetWorkspace: WorkspaceSvg;
   private readonly segmentManager: SegmentManager;
@@ -51,7 +51,7 @@ class ToolboxBuilder {
     });
   }
 
-  private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypo);
+  private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypoDescriptor);
   private getAxiomBlocks        = () => this.getBlocksByObjectType(Axiom);
   private getBlockAxiomBlocks   = () => this.getBlocksByObjectType(BlockAxiom);
   private getConstantBlocks     = () => this.getBlocksByObjectType(Constant);

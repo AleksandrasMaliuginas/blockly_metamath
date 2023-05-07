@@ -1,22 +1,25 @@
 
 import { Block } from "blockly";
-import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
+import { BlockTypes, ExtendedBlocklyBlock, MMBlock } from "../IBlocklyBlock";
 import { VariableHypothesis } from "../../DatabaseParser/MMStatements/VariableHypothesis";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { TipInfo } from "blockly/core/tooltip";
 import { StatementContext } from "../StatementContext";
 
-class FloatingHypo implements BlockDescriptor {
+class FloatingHypo implements MMBlock {
+
+  private readonly block: Block;
 
   readonly type: string | null;
   readonly originalStatement: string;
 
-  private readonly label: string | undefined;
+  private readonly label: string;
   private readonly constant: string | undefined;
   private readonly variable: string | undefined;
   private readonly context: StatementContext;
 
-  constructor(parsedStatement: VariableHypothesis, context : StatementContext) {
+  constructor(block: ExtendedBlocklyBlock, parsedStatement: VariableHypothesis, context : StatementContext) {
+    this.block = block;
+
     this.type = parsedStatement.constant ? parsedStatement.constant : null;
     this.label = parsedStatement.label;
     this.originalStatement = parsedStatement.originalStatement;
@@ -26,13 +29,13 @@ class FloatingHypo implements BlockDescriptor {
     this.context = context;
   }
 
-  initializer(): any {
-    const thisObject = this;
-    return {
-      init: function () {
-        thisObject.blockInit(this);
-      }
-    };
+  init(): void {
+    this.block.jsonInit(jsonBlockTemplate);
+    // block.setFieldValue(this.constant, 'CONST');
+    this.block.setFieldValue(this.variable, 'VAR');
+
+    this.block.setColour(this.context.getHueColor())
+    this.block.setTooltip(this.context.getStatementContext());
   }
 
   toolboxInstance() : ToolboxItemInfo {
@@ -42,21 +45,8 @@ class FloatingHypo implements BlockDescriptor {
     };
   }
 
-  blockToCode(): string {
-    return "";
-  }
-
-  toolTip() : TipInfo {
-    return this.originalStatement ? this.originalStatement : "No tooltip provided. \n asdfasdfasdf";
-  }
-
-  private blockInit(block: Block): void {
-    block.jsonInit(jsonBlockTemplate);
-    // block.setFieldValue(this.constant, 'CONST');
-    block.setFieldValue(this.variable, 'VAR');
-
-    block.setColour(this.context.getHueColor())
-    block.setTooltip(this.context.getStatementContext());
+  toCode(): string {
+    return this.label;
   }
 }
 
