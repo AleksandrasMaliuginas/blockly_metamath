@@ -6,8 +6,10 @@ import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAss
 
 class Proof implements BlockDescriptor {
 
+  readonly type: string | null = null;
+  readonly originalStatement: string = '';
+  
   private readonly label: string | undefined;
-  private readonly originalStatement: string | undefined;
 
   constructor(parsedStatement?: ProvableAssertion) {
     if (parsedStatement) {

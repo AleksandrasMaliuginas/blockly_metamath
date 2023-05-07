@@ -2,18 +2,19 @@
 import { Block } from "blockly";
 import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { StatementContext } from "../BlockRegistry";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
 import { IMMStatement } from "../../DatabaseParser/IMMStatement";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { MultiLineField } from "../../BlockRenderer/MultiLineFieldLabel";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
+import { StatementContext } from "../StatementContext";
 
 class BlockAxiom implements BlockDescriptor {
 
   readonly type: string | null;
+  readonly originalStatement: string;
+  
   private readonly label: string | undefined;
-  private readonly originalStatement: string | undefined;
 
   private readonly innerStatements: IMMStatement[] = [];
   private readonly context : StatementContext;
@@ -70,12 +71,8 @@ class BlockAxiom implements BlockDescriptor {
     const resultLabel = this.resultingStatement.mathSymbols ? this.resultingStatement.mathSymbols.join(' ') : '???';
     block.appendDummyInput('RESULT').appendField(resultLabel);
 
-
-
     block.setColour(this.context.getHueColor(this.type));
-    block.setTooltip(() => {
-      return this.originalStatement ? this.originalStatement : "No tooltip provided.";
-    });
+    block.setTooltip(this.context.getStatementContext());
   }
 
   private buildExpectedStatements() : IMMStatement[] {

@@ -16,7 +16,7 @@ export interface MMBlock {
 
 export interface BlockDescriptor {
   readonly type: string | null;
-  readonly originalStatement: string | null;
+  readonly originalStatement: string;
 
   initializer(): BlockDefinitionInicializer
   toolboxInstance(): ToolboxItemInfo

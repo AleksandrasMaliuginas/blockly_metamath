@@ -45,11 +45,8 @@ class AxiomSvg implements MMBlock {
       }
     });
 
-    this.block.setTooltip(() => {
-      return this.descriptor.originalStatement ? this.descriptor.originalStatement : "No tooltip provided.";
-    });
-
-    this.block.setColour(this.descriptor.context.getHueColor())
+    this.block.setColour(this.descriptor.context.getHueColor());
+    this.block.setTooltip(this.descriptor.context.getStatementContext());
   }
 }
 

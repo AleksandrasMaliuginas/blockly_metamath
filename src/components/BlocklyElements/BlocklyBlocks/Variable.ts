@@ -7,8 +7,9 @@ import { Constant as ConstantMMStatement } from "../../DatabaseParser/MMStatemen
 class Variable implements BlockDescriptor {
 
   readonly type: string | null = null;
+  readonly originalStatement: string;
+  
   private readonly label: string | undefined;
-  private readonly originalStatement: string | undefined;
 
   constructor(parsedStatement: ConstantMMStatement) {
     this.label = parsedStatement.label;
@@ -39,9 +40,7 @@ class Variable implements BlockDescriptor {
     block.jsonInit(jsonBlockTemplate);
     block.setFieldValue(this.label, 'VAR');
 
-    block.setTooltip(() => {
-      return this.originalStatement ? this.originalStatement : "No tooltip provided.";
-    });
+    block.setTooltip(this.originalStatement);
   }
 }
 

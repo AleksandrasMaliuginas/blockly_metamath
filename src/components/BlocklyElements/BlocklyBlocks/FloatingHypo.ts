@@ -3,13 +3,15 @@ import { Block } from "blockly";
 import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
 import { VariableHypothesis } from "../../DatabaseParser/MMStatements/VariableHypothesis";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { StatementContext } from "../BlockRegistry";
+import { TipInfo } from "blockly/core/tooltip";
+import { StatementContext } from "../StatementContext";
 
 class FloatingHypo implements BlockDescriptor {
 
   readonly type: string | null;
+  readonly originalStatement: string;
+
   private readonly label: string | undefined;
-  private readonly originalStatement: string | undefined;
   private readonly constant: string | undefined;
   private readonly variable: string | undefined;
   private readonly context: StatementContext;
@@ -44,15 +46,17 @@ class FloatingHypo implements BlockDescriptor {
     return "";
   }
 
+  toolTip() : TipInfo {
+    return this.originalStatement ? this.originalStatement : "No tooltip provided. \n asdfasdfasdf";
+  }
+
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
     // block.setFieldValue(this.constant, 'CONST');
     block.setFieldValue(this.variable, 'VAR');
 
     block.setColour(this.context.getHueColor())
-    block.setTooltip(() => {
-      return this.originalStatement ? this.originalStatement : "No tooltip provided.";
-    });
+    block.setTooltip(this.context.getStatementContext());
   }
 }
 
