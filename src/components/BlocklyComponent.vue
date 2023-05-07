@@ -18,13 +18,18 @@ import { BlockRegistry } from "./BlocklyElements/BlockRegistry";
 import { ToolboxBuilder } from "./BlocklyElements/Toolbox/ToolboxBuilder";
 import { MMRenderer, RENDERER_NAME } from "./BlockRenderer/MMRenderer";
 import { SegmentManager } from "./BlocklyElements/BlocklyBlocks/SegmentManager";
+import FilterComponent from "./FilterComponent.vue";
+import { BlockFinder } from "./BlockFinder";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
 const blocklyDiv = ref();
+const filterComponent = ref();
 const workspace = shallowRef();
 
 const codeGenerator = new Blockly.Generator('metamath');
+const mmBlockFinder = new BlockFinder();
+
 
 defineExpose({ workspace, codeGenerator });
 
@@ -50,9 +55,15 @@ onMounted(async () => {
   const parsedStatements = databaseParser.parse();
   console.table(parsedStatements);
 
+  // Create block filter
+  const types = new Set(parsedStatements.map(statement => statement.constant));
+  types.delete(undefined);
+  mmBlockFinder.setMMTypes(types);
+  filterComponent.value.setMMTypes(Array.from(types));
+
   // Create blockly blocks
   const segmentManager = new SegmentManager(workspace.value);
-  const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager);
+  const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager, mmBlockFinder);
   const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, segmentManager, codeGenerator);
   blockRegistry.mmStatements(parsedStatements);
 
@@ -66,21 +77,24 @@ onMounted(async () => {
   // const initializer = new WorkspaceInitializer(workspace.value);
   // initializer.loadInitialState();
 });
+
 </script>
 
 <template>
   <div>
+    <FilterComponent class="block-filter" :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
+    
     <div class="blocklyDiv" ref="blocklyDiv"></div>
-    <!-- <xml ref="blocklyToolbox" style="display: none">
-      <slot></slot>
-    </xml> -->
   </div>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.block-filter {
+  height: 2.3em;
+}
 .blocklyDiv {
-  height: 100%;
+  height: calc(100% - 2.3em);
   width: 100%;
   text-align: left;
 }

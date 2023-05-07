@@ -7,31 +7,35 @@ import { BlockAxiom } from "../BlocklyBlocks/BlockAxiom";
 import { SegmentManager } from "../BlocklyBlocks/SegmentManager";
 import { Constant } from "../BlocklyBlocks/Constant";
 import { Variable } from "../BlocklyBlocks/Variable";
+import { BlockFinder } from "../../BlockFinder";
 
 class ToolboxBuilder {
-  
-  private readonly blockList : any[];
-  // TODO: is workspace realy a Toolbox builder dependency
-  public readonly targetWorkspace : WorkspaceSvg;
-  private readonly segmentManager : SegmentManager;
 
-  constructor (workspace : WorkspaceSvg, segmentManager : SegmentManager) {
+  private readonly blockList: any[];
+  // TODO: is workspace realy a Toolbox builder dependency
+  public readonly targetWorkspace: WorkspaceSvg;
+  private readonly segmentManager: SegmentManager;
+  private readonly blockFinder: BlockFinder;
+
+  constructor(workspace: WorkspaceSvg, segmentManager: SegmentManager, blockFinder: BlockFinder) {
     this.targetWorkspace = workspace;
-    this.blockList = [];
-    this.registerToolboxCategoryCallbacks();
     this.segmentManager = segmentManager;
+    this.blockFinder = blockFinder;
+    this.blockList = [];
+
+    this.registerToolboxCategoryCallbacks();
   }
 
-  addBlock(block : BlockDescriptor) : void {
+  addBlock(block: BlockDescriptor): void {
     this.blockList.push(block);
   }
 
-  getToolboxJson() : any {
+  getToolboxJson(): any {
     return toolboxJson;
   }
 
   private registerToolboxCategoryCallbacks() {
-    const categoryClass : Map<string, any> = new Map([
+    const categories = new Map([
       ['MM_FLOATING_HYPOS', this.getFloatingHypoBlocks],
       ['MM_AXIOMS', this.getAxiomBlocks],
       ['MM_BLOCKS', this.getBlockAxiomBlocks],
@@ -40,11 +44,11 @@ class ToolboxBuilder {
       ['SEGMENTS', this.getSegments],
     ]);
 
-    categoryClass.forEach((value, key) => {
+    categories.forEach((value, key) => {
       this.targetWorkspace.registerToolboxCategoryCallback(
         key, value
       );
-    });    
+    });
   }
 
   private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypo);
@@ -54,9 +58,9 @@ class ToolboxBuilder {
   private getVariableBlocks     = () => this.getBlocksByObjectType(Variable);
   private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback(workspace);
 
-  private getBlocksByObjectType = (classtype : any) => {
-    return this.blockList.reduce((arr, block : BlockDescriptor) => {
-      if (block instanceof classtype) {
+  private getBlocksByObjectType = (classtype: any) => {
+    return this.blockList.reduce((arr, block: BlockDescriptor) => {
+      if (block instanceof classtype && this.blockFinder.match(block)) {
         arr.push(block.toolboxInstance());
       }
       return arr;
