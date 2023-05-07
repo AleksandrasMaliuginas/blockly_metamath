@@ -62,10 +62,15 @@ class BlockAxiom implements BlockDescriptor {
       }
     });
 
+    block.jsonInit(jsonBlockTemplate);
+
     const field = new MultiLineField(expectedStatementDescriptors.join(MultiLineField.NEW_LINE_INDICATOR));
     block.appendStatementInput("INPUT").appendField(field);
 
-    block.appendDummyInput('RESULT').appendField(this.resultingStatement.mathSymbols.join(' '))
+    const resultLabel = this.resultingStatement.mathSymbols ? this.resultingStatement.mathSymbols.join(' ') : '???';
+    block.appendDummyInput('RESULT').appendField(resultLabel);
+
+
 
     block.setColour(this.context.getHueColor(this.type));
     block.setTooltip(() => {
@@ -98,9 +103,6 @@ class BlockAxiom implements BlockDescriptor {
 
 const jsonBlockTemplate = {
   "type": BlockTypes.Axiom,
-  "message0": '',
-  "args0": [],
-  "inputsInline": true,
   "output": BlockTypes.Axiom,
   "colour": 210,
 

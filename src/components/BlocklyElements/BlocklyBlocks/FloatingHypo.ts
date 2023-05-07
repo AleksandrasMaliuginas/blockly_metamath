@@ -46,7 +46,7 @@ class FloatingHypo implements BlockDescriptor {
 
   private blockInit(block: Block): void {
     block.jsonInit(jsonBlockTemplate);
-    block.setFieldValue(this.constant, 'CONST');
+    // block.setFieldValue(this.constant, 'CONST');
     block.setFieldValue(this.variable, 'VAR');
 
     block.setColour(this.context.getHueColor())
@@ -58,13 +58,13 @@ class FloatingHypo implements BlockDescriptor {
 
 const jsonBlockTemplate = {
   "type": BlockTypes.FloatingHypo,
-  "message0": '%1 %2',
+  "message0": '%1', // '%1 %2',
   "args0": [
-    {
-      "type": "field_label_serializable",
-      "name": "CONST",
-      "text": ""
-    },
+    // {
+    //   "type": "field_label_serializable",
+    //   "name": "CONST",
+    //   "text": ""
+    // },
     {
       "type": "field_label_serializable",
       "name": "VAR",

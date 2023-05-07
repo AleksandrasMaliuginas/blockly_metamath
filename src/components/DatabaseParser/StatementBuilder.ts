@@ -21,6 +21,8 @@ const StatementBuilder = {
         return new AxiomaticAssertion();
       case Keywords.LOGICAL_HYPOTHESIS:
         return new LogicalHypothesis();
+      case Keywords.DISJOINT:
+        return new LogicalHypothesis();
       case Keywords.START_OF_SCOPING_BLOCK:
         return new ScopingBlock();
       case Keywords.PROOVABLE_ASSERTION:

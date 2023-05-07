@@ -4,8 +4,6 @@ import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { StatementContext } from "../BlockRegistry";
 import { AxiomSvg } from "./AxiomSvg";
-// import { duplicate } from "blockly/core/clipboard";
-
 
 class Axiom implements BlockDescriptor {
 
@@ -21,7 +19,7 @@ class Axiom implements BlockDescriptor {
     this.originalStatement = parsedStatement.originalStatement;
 
     this.type = parsedStatement.mathSymbols ? parsedStatement.mathSymbols[0] : null;
-    this.mathSymbols = parsedStatement.mathSymbols;
+    this.mathSymbols = parsedStatement.mathSymbols.slice(1);
     this.context = context;
   }
   
