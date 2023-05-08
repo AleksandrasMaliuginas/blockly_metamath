@@ -6,7 +6,6 @@ import { ToolboxBuilder } from "./Toolbox/ToolboxBuilder";
 import { AxiomaticAssertion } from "../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { ScopingBlock } from "../DatabaseParser/MMStatements/ScopingBlock";
 import { SegmentManager } from "./BlocklyBlocks/SegmentManager";
-import { Proof } from "./BlocklyBlocks/Proof";
 import { Variable } from "../DatabaseParser/MMStatements/Variable";
 import { Constant } from "../DatabaseParser/MMStatements/Constant";
 import { StatementContext } from "./StatementContext";
@@ -16,9 +15,10 @@ import { AxiomBlockDescriptor } from "./BlocklyBlocks/AxiomBlockDescriptor";
 import { ProvableAssertion } from "../DatabaseParser/MMStatements/ProvableAssertion";
 import { ConstantDescriptor } from "./BlocklyBlocks/ConstantDescriptor";
 import { VariableDescriptor } from "./BlocklyBlocks/VariableDescriptor";
+import { ProofDescriptor } from "./BlocklyBlocks/ProofDescriptor";
 
 interface IBlockRegistry {
-  mmStatements(mm_statement_list: IMMStatement[]): void
+  registerMMStatements(mm_statement_list: IMMStatement[]): void
 }
 
 class BlockRegistry implements IBlockRegistry {
@@ -33,19 +33,20 @@ class BlockRegistry implements IBlockRegistry {
     this.segmentManager = segmentManager;
     this.codeGenerator = codeGenerator as any;
     this.registerSegmentBlocks();
-    this.registerEmptyProof();
+
+    this.registerAdditionalBlocks();
   }
 
   public getJsonToolbox(): any {
     this.toolboxBuilder.getToolboxJson();
   }
 
-  public mmStatements(mm_statement_list: IMMStatement[]): void {
+  public registerMMStatements(mm_statement_list: IMMStatement[]): void {
     this.mm_statements = mm_statement_list;
-    mm_statement_list.forEach(this.registerBlocks);
+    mm_statement_list.forEach(this.registerStatementAsBlock);
   }
 
-  private registerBlocks = (mmStatement: IMMStatement, index: number) => {
+  private registerStatementAsBlock = (mmStatement: IMMStatement, index: number) => {
     const statementContext = new StatementContext(this.mm_statements, index);
 
     // Filter
@@ -55,15 +56,20 @@ class BlockRegistry implements IBlockRegistry {
 
     const blocklyBlock = this.createBlock(mmStatement, statementContext);
 
-    if (!blocklyBlock.descriptor) {
-      throw `No descriptor provided for '${mmStatement.label}' statement block.`;
+    this.registerBlock(blocklyBlock);
+  }
+
+  private registerBlock(block: ExtendedBlocklyBlock) {
+
+    if (!block.descriptor) {
+      throw `No descriptor provided for '${block.mmBlock?.constructor.name}' block.`;
     }
 
-    const blockName = blocklyBlock.descriptor.blockName();
+    const blockName = block.descriptor.blockName();
 
     // Register block
-    Blocks[blockName] = blocklyBlock;
-    this.toolboxBuilder.addBlock(blocklyBlock.descriptor);
+    Blocks[blockName] = block;
+    this.toolboxBuilder.addBlock(block.descriptor);
 
     // Register code generator
     this.codeGenerator[blockName] = (block: ExtendedBlocklyBlock) => {
@@ -71,17 +77,15 @@ class BlockRegistry implements IBlockRegistry {
     };
   }
 
+  private registerAdditionalBlocks() {
+    this.registerBlock(ProofDescriptor.create());
+  }
+
   private registerSegmentBlocks(): void {
     Blocks[BlockTypes.SegmentDef] = this.segmentManager.segmentDefinitionBlock();
     Blocks[BlockTypes.SegmentRef] = this.segmentManager.segmentReferenceBlock();
     this.codeGenerator[BlockTypes.SegmentDef] = () => { throw 'No implementation provided'; };
     this.codeGenerator[BlockTypes.SegmentRef] = () => { throw 'No implementation provided'; };
-  }
-
-  private registerEmptyProof(): void {
-    const emptyProof = new Proof();
-    Blocks[BlockTypes.Proof] = emptyProof.initializer();
-    this.codeGenerator[BlockTypes.Proof] = () => { throw 'No implementation provided'; };
   }
 
   private createBlock(statement: IMMStatement, context: StatementContext): ExtendedBlocklyBlock {

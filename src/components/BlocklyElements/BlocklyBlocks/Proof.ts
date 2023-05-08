@@ -1,53 +1,55 @@
 
 import { Block } from "blockly";
-import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
-import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
+import { BlockTypes, MMBlock, ExtendedBlocklyBlock } from "../IBlocklyBlock";
+import { Keywords } from "../../DatabaseParser/MM";
 
-class Proof implements BlockDescriptor {
+class Proof implements MMBlock {
 
-  readonly type: string | null = null;
-  readonly originalStatement: string = '';
-  
-  private readonly label: string | undefined;
+  private readonly block: Block;
 
-  constructor(parsedStatement?: ProvableAssertion) {
-    if (parsedStatement) {
-      this.label = parsedStatement.label;
-      this.originalStatement = parsedStatement.originalStatement;
-    }
+  constructor(block: ExtendedBlocklyBlock) {
+    this.block = block;
   }
 
-  initializer(): any {
-    const thisObject = this;
-    return {
-      init: function () {
-        thisObject.blockInit(this);
-      }
-    };
+  init(): void {
+    this.block.jsonInit(jsonBlockTemplate);
   }
 
-  toolboxInstance() : ToolboxItemInfo {
-    return {
-      "kind": "block",
-      "type": this.label
-    };
-  }
-
-  blockToCode(): string {
-    return "";
-  }
-
-  private blockInit(block: Block): void {
-    block.jsonInit(jsonBlockTemplate);
+  toCode(): string {
+    const label = this.block.getFieldValue(LABEL);
+    const assertion = this.assertionToCode();
+    const proof = this.proofToCode();
     
-    block.setTooltip(() => {
-      return this.originalStatement ? this.originalStatement : "No tooltip provided.";
-    });
+    return `${label} ${Keywords.PROOVABLE_ASSERTION} ${assertion} ${Keywords.START_OF_PROOF}
+    ${proof} 
+    ${Keywords.END_OF_STATEMENT}`;
   }
 
+  private assertionToCode() {
+    const firstBlock = this.block.getInput(ASSERTION)?.connection?.targetBlock() as ExtendedBlocklyBlock;
+    return firstBlock ? firstBlock.mmBlock?.toCode() : '?';
+  }
 
+  private proofToCode() {
+    const firstBlock = this.block.getInput(PROOF)?.connection?.targetBlock() as ExtendedBlocklyBlock;
+    return firstBlock ? this.innerBlockToCode(firstBlock) : '???';
+  }
+
+  private innerBlockToCode(block: ExtendedBlocklyBlock): string {
+    const code = block.mmBlock?.toCode();
+
+    if (block.nextConnection.isConnected()) {
+      const nextBlock = block.nextConnection.targetBlock() as ExtendedBlocklyBlock;
+      return code + ' ' + this.innerBlockToCode(nextBlock);
+    }
+
+    return code ? code : '???';
+  }
 }
+
+const LABEL = 'LABEL';
+const ASSERTION = 'ASSERTION';
+const PROOF = 'PROOF';
 
 const jsonBlockTemplate = {
   "type": BlockTypes.Proof,
@@ -55,16 +57,16 @@ const jsonBlockTemplate = {
   "args0": [
     {
       "type": "field_input",
-      "name": "LABEL",
+      "name": LABEL,
       "text": "default"
     },
     {
       "type": "input_value",
-      "name": "ASSERTION"
+      "name": ASSERTION
     },
     {
       "type": "input_statement",
-      "name": "PROOF"
+      "name": PROOF
     }
   ],
   "inputsInline": true,

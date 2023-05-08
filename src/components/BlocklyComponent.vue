@@ -65,7 +65,7 @@ onMounted(async () => {
   const segmentManager = new SegmentManager(workspace.value);
   const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager, mmBlockFinder);
   const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, segmentManager, codeGenerator);
-  blockRegistry.mmStatements(parsedStatements);
+  blockRegistry.registerMMStatements(parsedStatements);
 
   // Create Blockly toolbox
   // TODO: move to toolbox builder. toolboxBuilder.updateToolbox()
