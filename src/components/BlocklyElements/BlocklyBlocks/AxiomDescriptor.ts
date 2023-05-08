@@ -1,10 +1,10 @@
-import { ExtendedBlocklyBlock, MMBlock } from "../IBlocklyBlock";
+import { BlockDescriptor, ExtendedBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { StatementContext } from "../StatementContext";
 import { Axiom } from "./Axiom";
 
-class AxiomDescriptor implements MMBlock {
+class AxiomDescriptor implements BlockDescriptor {
 
   private readonly statement: AxiomaticAssertion;
 

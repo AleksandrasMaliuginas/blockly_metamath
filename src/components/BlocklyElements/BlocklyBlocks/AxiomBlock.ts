@@ -1,6 +1,6 @@
 
 import { Block } from "blockly";
-import { BlockTypes, BlockDescriptor, ExtendedBlocklyBlock } from "../IBlocklyBlock";
+import { BlockTypes, ExtendedBlocklyBlock, MMBlock } from "../IBlocklyBlock";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
 import { IMMStatement } from "../../DatabaseParser/IMMStatement";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
@@ -8,14 +8,14 @@ import { MultiLineField } from "../../BlockRenderer/MultiLineFieldLabel";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 import { StatementContext } from "../StatementContext";
 
-class AxiomBlock implements BlockDescriptor {
+class AxiomBlock implements MMBlock {
 
   private readonly block: Block;
 
   readonly type: string | null;
   readonly originalStatement: string;
   
-  private readonly label: string | undefined;
+  private readonly label: string;
 
   private readonly innerStatements: IMMStatement[] = [];
   private readonly context : StatementContext;
@@ -23,15 +23,15 @@ class AxiomBlock implements BlockDescriptor {
   private readonly expectedStatements : IMMStatement[] = [];
   private readonly resultingStatement : AxiomaticAssertion | ProvableAssertion;
 
-  constructor(block: ExtendedBlocklyBlock, parsedStatement: ScopingBlock, context : StatementContext) {
+  constructor(block: ExtendedBlocklyBlock, statement: ScopingBlock, context : StatementContext) {
     this.block = block;
 
-    this.label = parsedStatement.label;
-    this.originalStatement = parsedStatement.originalStatement;
-    this.innerStatements = parsedStatement.statements;
+    this.label = statement.label;
+    this.originalStatement = statement.originalStatement;
+    this.innerStatements = statement.statements;
     this.context = context;
 
-    this.resultingStatement = parsedStatement.statements[parsedStatement.statements.length - 1] as AxiomaticAssertion;
+    this.resultingStatement = statement.statements[statement.statements.length - 1] as AxiomaticAssertion;
     this.type = this.resultingStatement.constant ? this.resultingStatement.constant : null;
 
     this.expectedStatements = this.buildExpectedStatements();

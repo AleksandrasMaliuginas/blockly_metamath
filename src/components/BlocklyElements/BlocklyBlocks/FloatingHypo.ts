@@ -13,19 +13,19 @@ class FloatingHypo implements MMBlock {
   readonly originalStatement: string;
 
   private readonly label: string;
-  private readonly constant: string | undefined;
-  private readonly variable: string | undefined;
+  private readonly constant: string;
+  private readonly variable: string;
   private readonly context: StatementContext;
 
-  constructor(block: ExtendedBlocklyBlock, parsedStatement: VariableHypothesis, context: StatementContext) {
+  constructor(block: ExtendedBlocklyBlock, statement: VariableHypothesis, context: StatementContext) {
     this.block = block;
 
-    this.type = parsedStatement.constant ? parsedStatement.constant : null;
-    this.label = parsedStatement.label;
-    this.originalStatement = parsedStatement.originalStatement;
+    this.type = statement.constant ? statement.constant : null;
+    this.label = statement.label;
+    this.originalStatement = statement.originalStatement;
 
-    this.constant = parsedStatement.constant;
-    this.variable = parsedStatement.variable;
+    this.constant = statement.constant;
+    this.variable = statement.variable;
     this.context = context;
   }
 
@@ -36,13 +36,6 @@ class FloatingHypo implements MMBlock {
 
     this.block.setColour(this.context.getHueColor())
     this.block.setTooltip(this.context.getStatementContext());
-  }
-
-  toolboxInstance(): ToolboxItemInfo {
-    return {
-      "kind": "block",
-      "type": this.label
-    };
   }
 
   toCode(): string {

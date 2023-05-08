@@ -20,13 +20,13 @@ class Axiom implements MMBlock {
 
   private readonly inputs: Map<string, BindedInput> = new Map();
 
-  constructor(block: ExtendedBlocklyBlock, parsedStatement: AxiomaticAssertion, context: StatementContext) {
+  constructor(block: ExtendedBlocklyBlock, statement: AxiomaticAssertion, context: StatementContext) {
     this.block = block;
-    this.label = parsedStatement.label;
-    this.originalStatement = parsedStatement.originalStatement;
+    this.label = statement.label;
+    this.originalStatement = statement.originalStatement;
 
-    this.type = parsedStatement.mathSymbols ? parsedStatement.mathSymbols[0] : null;
-    this.mathSymbols = parsedStatement.mathSymbols.slice(1);
+    this.type = statement.mathSymbols ? statement.mathSymbols[0] : null;
+    this.mathSymbols = statement.mathSymbols.slice(1);
     this.context = context;
 
 

@@ -2,13 +2,12 @@ import { WorkspaceSvg } from "blockly"
 import { toolboxJson } from "./toolboxJson";
 import { BlockDescriptor } from "../IBlocklyBlock";
 import { SegmentManager } from "../BlocklyBlocks/SegmentManager";
-import { Constant } from "../BlocklyBlocks/Constant";
-import { Variable } from "../BlocklyBlocks/Variable";
 import { BlockFinder } from "../../BlockFinder";
 import { FloatingHypoDescriptor } from "../BlocklyBlocks/FloatingHypoDescriptor";
 import { AxiomDescriptor } from "../BlocklyBlocks/AxiomDescriptor";
 import { AxiomBlockDescriptor } from "../BlocklyBlocks/AxiomBlockDescriptor";
 import { ConstantDescriptor } from "../BlocklyBlocks/ConstantDescriptor";
+import { VariableDescriptor } from "../BlocklyBlocks/VariableDescriptor";
 
 class ToolboxBuilder {
 
@@ -56,7 +55,7 @@ class ToolboxBuilder {
   private getAxiomBlocks        = () => this.getBlocksByObjectType(AxiomDescriptor);
   private getBlockAxiomBlocks   = () => this.getBlocksByObjectType(AxiomBlockDescriptor);
   private getConstantBlocks     = () => this.getBlocksByObjectType(ConstantDescriptor);
-  private getVariableBlocks     = () => this.getBlocksByObjectType(Variable);
+  private getVariableBlocks     = () => this.getBlocksByObjectType(VariableDescriptor);
   private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback(workspace);
 
   private getBlocksByObjectType = (classtype: any) => {
