@@ -1,48 +1,44 @@
 
 import { Block } from "blockly";
-import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
-import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
+import { BlockTypes, MMBlock, ExtendedBlocklyBlock } from "../IBlocklyBlock";
 import { Constant as ConstantMMStatement } from "../../DatabaseParser/MMStatements/Constant";
+import { StatementContext } from "../StatementContext";
 
-class Constant implements BlockDescriptor {
+class Constant implements MMBlock {
+
+  private readonly block: Block;
 
   readonly type: string | null = null;
   readonly originalStatement: string;
   
-  private readonly label: string | undefined;
+  private readonly label: string;
 
-  constructor(parsedStatement: ConstantMMStatement) {
-    this.label = parsedStatement.label;
-    this.originalStatement = parsedStatement.originalStatement;
+  constructor(block: ExtendedBlocklyBlock, statement: ConstantMMStatement, context?: StatementContext) {
+    this.block = block;
+    this.label = statement.label;
+    this.originalStatement = statement.originalStatement;
   }
 
-  initializer(): any {
-    const thisObject = this;
-    return {
-      init: function () {
-        thisObject.blockInit(this);
-      }
-    };
+  init(): void {
+    this.block.jsonInit(jsonBlockTemplate);
+    this.block.setFieldValue(this.label, CONST);
+
+    this.block.setTooltip(this.originalStatement);
   }
 
-  toolboxInstance() : ToolboxItemInfo {
-    return {
-      "kind": "block",
-      "type": this.label
-    };
-  }
+  toCode(): string {
+    const nextBlock = this.block.getInput(NEXT)?.connection?.targetBlock() as ExtendedBlocklyBlock;
 
-  blockToCode(): string {
-    return "";
-  }
+    if (nextBlock && nextBlock.mmBlock) {
+      return this.label + ' ' + nextBlock.mmBlock.toCode();
+    }
 
-  private blockInit(block: Block): void {
-    block.jsonInit(jsonBlockTemplate);
-    block.setFieldValue(this.label, 'CONST');
-
-    block.setTooltip(this.originalStatement);
+    return this.label;
   }
 }
+
+const NEXT = 'NEXT';
+const CONST = 'CONST';
 
 const jsonBlockTemplate = {
   "type": BlockTypes.Constant,
@@ -50,12 +46,12 @@ const jsonBlockTemplate = {
   "args0": [
     {
       "type": "field_label_serializable",
-      "name": "CONST",
+      "name": CONST,
       "text": "NO_LABEL"
     },
     {
       "type": "input_value",
-      "name": "NEXT",
+      "name": NEXT,
       "check": [BlockTypes.Constant, BlockTypes.Variable]
     }
   ],

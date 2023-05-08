@@ -8,7 +8,7 @@ import { ScopingBlock } from "../DatabaseParser/MMStatements/ScopingBlock";
 import { SegmentManager } from "./BlocklyBlocks/SegmentManager";
 import { Proof } from "./BlocklyBlocks/Proof";
 import { Variable as VariableMMStatement } from "../DatabaseParser/MMStatements/Variable";
-import { Constant as ConstantMMStatement } from "../DatabaseParser/MMStatements/Constant";
+import { Constant as MMConstant } from "../DatabaseParser/MMStatements/Constant";
 import { Constant } from "./BlocklyBlocks/Constant";
 import { Variable } from "./BlocklyBlocks/Variable";
 import { StatementContext } from "./StatementContext";
@@ -16,6 +16,7 @@ import { FloatingHypoDescriptor } from "./BlocklyBlocks/FloatingHypoDescriptor";
 import { AxiomDescriptor } from "./BlocklyBlocks/AxiomDescriptor";
 import { AxiomBlockDescriptor } from "./BlocklyBlocks/AxiomBlockDescriptor";
 import { ProvableAssertion } from "../DatabaseParser/MMStatements/ProvableAssertion";
+import { ConstantDescriptor } from "./BlocklyBlocks/ConstantDescriptor";
 
 interface IBlockRegistry {
   mmStatements(mm_statement_list: IMMStatement[]): void
@@ -45,7 +46,7 @@ class BlockRegistry implements IBlockRegistry {
     const statementContext = new StatementContext(this.mm_statements, index);
 
     // Old way
-    if (mmStatement instanceof ConstantMMStatement || mmStatement instanceof VariableMMStatement) {
+    if (mmStatement instanceof VariableMMStatement) {
       const block = this.getBlocklyBlock(mmStatement, statementContext);
 
       if (block) {
@@ -107,14 +108,14 @@ class BlockRegistry implements IBlockRegistry {
       return AxiomBlockDescriptor.create(statement, context);
     }
 
+    if (statement instanceof MMConstant) {
+      return ConstantDescriptor.create(statement, context);
+    }
+
     throw `Statement (${statement.constructor.name})[label:'${statement.label}', keyword:'${statement.keyword}'] cannot be recognized.`;
   }
 
   private getBlocklyBlock(mmStatement: IMMStatement, statementContext: StatementContext): BlockDescriptor | undefined {
-
-    if (mmStatement instanceof ConstantMMStatement) {
-      return new Constant(mmStatement);
-    }
 
     if (mmStatement instanceof VariableMMStatement) {
       return new Variable(mmStatement);

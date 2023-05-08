@@ -8,6 +8,7 @@ import { BlockFinder } from "../../BlockFinder";
 import { FloatingHypoDescriptor } from "../BlocklyBlocks/FloatingHypoDescriptor";
 import { AxiomDescriptor } from "../BlocklyBlocks/AxiomDescriptor";
 import { AxiomBlockDescriptor } from "../BlocklyBlocks/AxiomBlockDescriptor";
+import { ConstantDescriptor } from "../BlocklyBlocks/ConstantDescriptor";
 
 class ToolboxBuilder {
 
@@ -54,7 +55,7 @@ class ToolboxBuilder {
   private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypoDescriptor);
   private getAxiomBlocks        = () => this.getBlocksByObjectType(AxiomDescriptor);
   private getBlockAxiomBlocks   = () => this.getBlocksByObjectType(AxiomBlockDescriptor);
-  private getConstantBlocks     = () => this.getBlocksByObjectType(Constant);
+  private getConstantBlocks     = () => this.getBlocksByObjectType(ConstantDescriptor);
   private getVariableBlocks     = () => this.getBlocksByObjectType(Variable);
   private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback(workspace);
 
