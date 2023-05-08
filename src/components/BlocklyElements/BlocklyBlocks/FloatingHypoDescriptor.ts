@@ -20,7 +20,7 @@ class FloatingHypoDescriptor implements BlockDescriptor {
   toolboxInstance() : ToolboxItemInfo {
     return {
       "kind": "block",
-      "type": this.statement.label
+      "type": this.blockName()
     };
   }
 

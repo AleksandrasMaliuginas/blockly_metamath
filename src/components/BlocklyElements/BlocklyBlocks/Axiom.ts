@@ -31,7 +31,7 @@ class Axiom implements MMBlock {
 
 
     this.mathSymbols?.forEach(symbol => {
-      const definition: IMMStatement|undefined = this.context.getDefinitionOf(symbol);
+      const definition: IMMStatement | undefined = this.context.getDefinitionOf(symbol);
 
       if (definition instanceof Variable) {
         this.inputs.set(definition.label, new BindedInput(definition.label, block));

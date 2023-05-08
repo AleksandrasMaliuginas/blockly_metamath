@@ -1,7 +1,6 @@
 
 import { Block } from "blockly";
-import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
-import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
+import { BlockTypes, BlockDescriptor, ExtendedBlocklyBlock } from "../IBlocklyBlock";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
 import { IMMStatement } from "../../DatabaseParser/IMMStatement";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
@@ -9,7 +8,9 @@ import { MultiLineField } from "../../BlockRenderer/MultiLineFieldLabel";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 import { StatementContext } from "../StatementContext";
 
-class BlockAxiom implements BlockDescriptor {
+class AxiomBlock implements BlockDescriptor {
+
+  private readonly block: Block;
 
   readonly type: string | null;
   readonly originalStatement: string;
@@ -22,7 +23,9 @@ class BlockAxiom implements BlockDescriptor {
   private readonly expectedStatements : IMMStatement[] = [];
   private readonly resultingStatement : AxiomaticAssertion | ProvableAssertion;
 
-  constructor(parsedStatement: ScopingBlock, context : StatementContext) {
+  constructor(block: ExtendedBlocklyBlock, parsedStatement: ScopingBlock, context : StatementContext) {
+    this.block = block;
+
     this.label = parsedStatement.label;
     this.originalStatement = parsedStatement.originalStatement;
     this.innerStatements = parsedStatement.statements;
@@ -34,27 +37,7 @@ class BlockAxiom implements BlockDescriptor {
     this.expectedStatements = this.buildExpectedStatements();
   }
 
-  initializer(): any {
-    const thisObject = this;
-    return {
-      init: function () {
-        thisObject.blockInit(this);
-      }
-    };
-  }
-
-  toolboxInstance() : ToolboxItemInfo {
-    return {
-      "kind": "block",
-      "type": this.label
-    };
-  }
-
-  blockToCode(): string {
-    return "";
-  }
-
-  private blockInit(block: Block): void {
+  init(): void {
     // Init expected hypos
     const expectedStatementDescriptors : string[] = [];
     this.expectedStatements.forEach(st => {
@@ -63,16 +46,37 @@ class BlockAxiom implements BlockDescriptor {
       }
     });
 
-    block.jsonInit(jsonBlockTemplate);
+    this.block.jsonInit(jsonBlockTemplate);
 
     const field = new MultiLineField(expectedStatementDescriptors.join(MultiLineField.NEW_LINE_INDICATOR));
-    block.appendStatementInput("INPUT").appendField(field);
+    this.block.appendStatementInput(INNER_STATEMENTS).appendField(field);
 
     const resultLabel = this.resultingStatement.mathSymbols ? this.resultingStatement.mathSymbols.join(' ') : '???';
-    block.appendDummyInput('RESULT').appendField(resultLabel);
+    this.block.appendDummyInput('RESULT').appendField(resultLabel);
 
-    block.setColour(this.context.getHueColor(this.type));
-    block.setTooltip(this.context.getStatementContext());
+    this.block.setColour(this.context.getHueColor(this.type));
+    this.block.setTooltip(this.context.getStatementContext());
+  }
+
+  toCode(): string {
+    const firstBlock = this.block.getInput(INNER_STATEMENTS)?.connection?.targetBlock() as ExtendedBlocklyBlock;
+
+    if (!firstBlock) {
+      return this.expectedStatements.reduce((str, _) => str += '? ', '') + this.label;
+    } 
+    
+    return this.innerBlockToCode(firstBlock) + ' ' + this.label;
+  }
+
+  private innerBlockToCode(block: ExtendedBlocklyBlock): string {
+    const code = block.mmBlock?.toCode();
+
+    if (block.nextConnection.isConnected()) {
+      const nextBlock = block.nextConnection.targetBlock() as ExtendedBlocklyBlock;
+      return code + ' ' + this.innerBlockToCode(nextBlock);
+    }
+
+    return code ? code : '???';
   }
 
   private buildExpectedStatements() : IMMStatement[] {
@@ -98,6 +102,8 @@ class BlockAxiom implements BlockDescriptor {
   }
 }
 
+const INNER_STATEMENTS = 'INPUT';
+
 const jsonBlockTemplate = {
   "type": BlockTypes.Axiom,
   "output": BlockTypes.Axiom,
@@ -107,4 +113,4 @@ const jsonBlockTemplate = {
   "nextStatement": null,
 };
 
-export { BlockAxiom }
+export { AxiomBlock }

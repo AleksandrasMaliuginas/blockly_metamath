@@ -2,8 +2,6 @@ import { ExtendedBlocklyBlock, MMBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AxiomaticAssertion } from "../../DatabaseParser/MMStatements/AxiomaticAssertion";
 import { StatementContext } from "../StatementContext";
-import { FloatingHypo } from "./FloatingHypo";
-import { FloatingHypoDescriptor } from "./FloatingHypoDescriptor";
 import { Axiom } from "./Axiom";
 
 class AxiomDescriptor implements MMBlock {
@@ -21,7 +19,7 @@ class AxiomDescriptor implements MMBlock {
   toolboxInstance(): ToolboxItemInfo {
     return {
       "kind": "block",
-      "type": this.statement.label
+      "type": this.blockName()
     };
   }
 
