@@ -8,6 +8,7 @@ import { Constant } from "../BlocklyBlocks/Constant";
 import { Variable } from "../BlocklyBlocks/Variable";
 import { BlockFinder } from "../../BlockFinder";
 import { FloatingHypoDescriptor } from "../BlocklyBlocks/FloatingHypoDescriptor";
+import { AxiomDescriptor } from "../BlocklyBlocks/AxiomDescriptor";
 
 class ToolboxBuilder {
 
@@ -52,7 +53,7 @@ class ToolboxBuilder {
   }
 
   private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypoDescriptor);
-  private getAxiomBlocks        = () => this.getBlocksByObjectType(Axiom);
+  private getAxiomBlocks        = () => this.getBlocksByObjectType(AxiomDescriptor);
   private getBlockAxiomBlocks   = () => this.getBlocksByObjectType(BlockAxiom);
   private getConstantBlocks     = () => this.getBlocksByObjectType(Constant);
   private getVariableBlocks     = () => this.getBlocksByObjectType(Variable);

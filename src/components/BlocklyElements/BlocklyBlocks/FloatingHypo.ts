@@ -17,7 +17,7 @@ class FloatingHypo implements MMBlock {
   private readonly variable: string | undefined;
   private readonly context: StatementContext;
 
-  constructor(block: ExtendedBlocklyBlock, parsedStatement: VariableHypothesis, context : StatementContext) {
+  constructor(block: ExtendedBlocklyBlock, parsedStatement: VariableHypothesis, context: StatementContext) {
     this.block = block;
 
     this.type = parsedStatement.constant ? parsedStatement.constant : null;
@@ -38,7 +38,7 @@ class FloatingHypo implements MMBlock {
     this.block.setTooltip(this.context.getStatementContext());
   }
 
-  toolboxInstance() : ToolboxItemInfo {
+  toolboxInstance(): ToolboxItemInfo {
     return {
       "kind": "block",
       "type": this.label

@@ -16,6 +16,7 @@ import { Variable } from "./BlocklyBlocks/Variable";
 import { StatementContext } from "./StatementContext";
 import { Keywords } from "../DatabaseParser/MM";
 import { FloatingHypoDescriptor } from "./BlocklyBlocks/FloatingHypoDescriptor";
+import { AxiomDescriptor } from "./BlocklyBlocks/AxiomDescriptor";
 
 interface IBlockRegistry {
   mmStatements(mm_statement_list: IMMStatement[]): void
@@ -45,10 +46,10 @@ class BlockRegistry implements IBlockRegistry {
     const statementContext = new StatementContext(this.mm_statements, index);
 
     // New way
-    if ([Keywords.VARIABLE_HYPOTHESIS.valueOf()].includes(mmStatement.keyword)) {
+    if ([Keywords.VARIABLE_HYPOTHESIS.valueOf(), Keywords.AXIOMATIC_ASSERTION.valueOf()].includes(mmStatement.keyword)) {
 
       const blocklyBlock = this.createBlock(mmStatement, statementContext);
-      
+
       if (!blocklyBlock.descriptor) {
         throw `No descriptor provided for '${mmStatement.label}' statement block.`;
       }
@@ -72,8 +73,8 @@ class BlockRegistry implements IBlockRegistry {
 
     if (block) {
       Blocks[mmStatement.label] = block.initializer();
-      
-      this.codeGenerator[mmStatement.label] = () => {throw "Old implementation! Migrate to new one."};
+
+      this.codeGenerator[mmStatement.label] = () => { throw "Old implementation! Migrate to new one." };
       this.toolboxBuilder.addBlock(block);
     }
   }
@@ -95,13 +96,14 @@ class BlockRegistry implements IBlockRegistry {
       return FloatingHypoDescriptor.create(statement, context);
     }
 
+    if (statement instanceof AxiomaticAssertion) {
+      return AxiomDescriptor.create(statement, context);
+    }
+
     throw `Statement (${statement.constructor.name})[label:'${statement.label}', keyword:'${statement.keyword}'] cannot be recognized.`;
   }
 
   private getBlocklyBlock(mmStatement: IMMStatement, statementContext: StatementContext): BlockDescriptor | undefined {
-    if (mmStatement instanceof AxiomaticAssertion) {
-      return new Axiom(mmStatement, statementContext, this.toolboxBuilder.targetWorkspace);
-    }
 
     if (mmStatement instanceof ScopingBlock) {
       return new BlockAxiom(mmStatement, statementContext);

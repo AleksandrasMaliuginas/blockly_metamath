@@ -25,6 +25,16 @@ class BindedInput {
     this.blockInputs.push(input);
   }
 
+  public getConnectedBlock(): ExtendedBlocklyBlock | null {
+    const connection = this.blockInputs[0].connection;
+
+    if (connection?.isConnected()) {
+      return connection.targetBlock() as ExtendedBlocklyBlock;
+    }
+
+    return null;
+  }
+
   private static getBindedInputName(input: Input) {
     return input.name.split('.')[0];
   }
