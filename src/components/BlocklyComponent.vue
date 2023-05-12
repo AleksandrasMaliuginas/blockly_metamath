@@ -1,14 +1,4 @@
 <script setup lang="ts">
-/**
- * @license
- * Copyright 2022 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
- * @fileoverview Blockly Vue Component.
- * @author dcoodien@gmail.com (Dylan Coodien)
- */
 
 import { onMounted, ref, shallowRef } from "vue";
 import Blockly from "blockly";
@@ -20,11 +10,13 @@ import { MMRenderer, RENDERER_NAME } from "./BlockRenderer/MMRenderer";
 import { SegmentManager } from "./BlocklyElements/BlocklyBlocks/SegmentManager";
 import FilterComponent from "./FilterComponent.vue";
 import { BlockFinder } from "./BlockFinder";
+import ExecutionComponent from "./Execution/ExecutionComponent.vue";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
 const blocklyDiv = ref();
 const filterComponent = ref();
+const executionComponent = ref();
 const workspace = shallowRef();
 
 const codeGenerator = new Blockly.Generator('metamath');
@@ -48,6 +40,7 @@ onMounted(async () => {
 
   // Open MM file
   const file = await fetch("demo0.mm");
+  // const file = await fetch("hol.mm");
   const fileStr = await file.text();
 
   // Parse MM database file
@@ -78,24 +71,43 @@ onMounted(async () => {
   // initializer.loadInitialState();
 });
 
+function workspaceToCode(): string {
+  return codeGenerator.workspaceToCode(workspace.value);
+}
+
+
+
+
+const cssVars = {
+  filterComponent: '2.3em',
+  executionComponent: '200px'
+};
 </script>
 
 <template>
   <div>
-    <FilterComponent class="block-filter" :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
+    <FilterComponent :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
     
     <div class="blocklyDiv" ref="blocklyDiv"></div>
+
+    <ExecutionComponent :workspaceToCode="workspaceToCode" ref="executionComponent"></ExecutionComponent>
   </div>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.block-filter {
-  height: 2.3em;
+
+FilterComponent {
+  height: v-bind('cssVars.filterComponent');
 }
+
 .blocklyDiv {
-  height: calc(100% - 2.3em);
+  height: calc(100% - v-bind('cssVars.filterComponent') - v-bind('cssVars.executionComponent'));
   width: 100%;
   text-align: left;
+}
+
+ExecutionComponent {
+  height: v-bind('cssVars.executionComponent');
 }
 </style>

@@ -65,91 +65,35 @@ const options = {
         </xml>`,
 };
 
-const showCode = () => (code.value = blocklyComponent.value.codeGenerator.workspaceToCode(blocklyComponent.value.workspace));
+// const showCode = () => (code.value = blocklyComponent.value.codeGenerator.workspaceToCode(blocklyComponent.value.workspace));
 
 </script>
 
 
 <template>
-  <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-    <!-- <BlocklyComponent id="blockly1">
-      <block type="controls_ifelse"></block>
-      <block type="logic_compare"></block>
-      <block type="logic_operation"></block>
-      <block type="controls_repeat_ext">
-        <value name="TIMES">
-          <shadow type="math_number">
-            <field name="NUM">10</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="logic_operation"></block>
-      <block type="logic_negate"></block>
-      <block type="logic_boolean"></block>
-      <block type="logic_null" disabled="true"></block>
-      <block type="logic_ternary"></block>
-      <block type="text_charAt">
-        <value name="VALUE">
-          <block type="variables_get">
-            <field name="VAR">text</field>
-          </block>
-        </value>
-      </block>
-    </BlocklyComponent> -->
-
-    <BlocklyComponent id="blockly2" :options="options" ref="blocklyComponent"></BlocklyComponent>
-
-    <p id="code">
-      <button v-on:click="showCode()">Show JavaScript</button>
-      <pre v-html="code"></pre>
-    </p>
-    
-  </div>
+  <BlocklyComponent id="blockly" :options="options" ref="blocklyComponent"></BlocklyComponent>
 </template>
 
 
-<style scoped>
+<style>
+html, body {
+  margin: 0;
+  display: block;
+}
+
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-html,
-body {
   margin: 0;
 }
 
-#code {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 20%;
-  height: 100%;
-  margin: 0;
-  background-color: beige;
-}
-
-#code button {
-  display: block;
-  margin: 20px auto;
-}
-
-/* #blockly1 {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 50%;
-  height: 50%;
-} */
-
-#blockly2 {
+#blockly {
   position: absolute;
   left: 0;
   top: 0;
-  width: 80%;
+  width: 100%;
   height: 100%;
 }
 </style>
