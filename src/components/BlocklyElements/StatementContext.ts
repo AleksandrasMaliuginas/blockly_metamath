@@ -17,15 +17,14 @@ class StatementContext {
   }
 
   private setHueColors() {
-    const types = new Set(this.mmStatements.map(statement => statement.constant))
-    types.delete(undefined)
-    const step = 360 / types.size;
-    let hueColor = 0;
+    const types = new Set(this.mmStatements.map(statement => statement.constant));
+    types.delete(undefined);
 
-    types.forEach(type => {
-      this.colors.set(type, hueColor);
-      hueColor += step;
-    });
+    let index = 0;
+    for (const type of types) {
+      this.colors.set(type, COLORS[index]);
+      index++;
+    }
   }
 
   public getHueColor(type: string | null = null): number {
@@ -82,5 +81,6 @@ class StatementContext {
 }
 
 const END_LINE = '\n';
+const COLORS = [0, 120, 240, 60, 180, 300, 30, 90, 150, 210, 270, 330];
 
 export { StatementContext }
