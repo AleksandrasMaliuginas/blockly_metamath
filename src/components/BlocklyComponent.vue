@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { onMounted, ref, shallowRef } from "vue";
-import Blockly from "blockly";
+import Blockly, { WorkspaceSvg } from "blockly";
 
 import { DatabaseParser } from "./DatabaseParser/DatabaseParser";
 import { BlockRegistry } from "./BlocklyElements/BlockRegistry";
@@ -11,12 +11,14 @@ import { SegmentManager } from "./BlocklyElements/BlocklyBlocks/SegmentManager";
 import FilterComponent from "./FilterComponent.vue";
 import { BlockFinder } from "./BlockFinder";
 import ExecutionComponent from "./Execution/ExecutionComponent.vue";
+import WorkspaceLoadComponent from "./WorkspaceLoadComponent.vue";
 
 const props = defineProps(["options"]);
 const blocklyToolbox = ref();
 const blocklyDiv = ref();
 const filterComponent = ref();
 const executionComponent = ref();
+const loaderComponent = ref();
 const workspace = shallowRef();
 
 const codeGenerator = new Blockly.Generator('metamath');
@@ -83,18 +85,23 @@ function workspaceToCode(): string {
   return codeGenerator.workspaceToCode(workspace.value);
 }
 
-
-
+function getWorkspace(): WorkspaceSvg {
+  return workspace.value;
+}
 
 const cssVars = {
-  filterComponent: '2.3em',
+  headerRow: '2.3em',
   executionComponent: '200px'
 };
 </script>
 
 <template>
   <div>
-    <FilterComponent :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
+    <section class="header">
+      <FilterComponent :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
+
+      <WorkspaceLoadComponent :getWorkspace="getWorkspace" ref="loaderComponent"></WorkspaceLoadComponent>
+    </section>
     
     <div class="blocklyDiv" ref="blocklyDiv"></div>
 
@@ -105,12 +112,24 @@ const cssVars = {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+section.header {
+  height: v-bind('cssVars.headerRow');
+}
+
 FilterComponent {
-  height: v-bind('cssVars.filterComponent');
+  display: inline-block;
+  width: 70%;
+  min-width: none;
+}
+
+WorkspaceLoadComponent {
+  display: inline-block;
+  width: 30%;
+  min-width: none;
 }
 
 .blocklyDiv {
-  height: calc(100% - v-bind('cssVars.filterComponent') - v-bind('cssVars.executionComponent'));
+  height: calc(100% - v-bind('cssVars.headerRow') - v-bind('cssVars.executionComponent'));
   width: 100%;
   text-align: left;
 }
