@@ -11,6 +11,7 @@ class VariableHypothesis implements IMMStatement {
   originalStatement: string;
 
   context: IMMStatement[] = [];
+  type: string;
 
   constant: string;
   variable: string;
@@ -25,6 +26,7 @@ class VariableHypothesis implements IMMStatement {
     this.mathSymbols = params.slice(2, -1);
     this.constant = params[2];
     this.variable = params[3];
+    this.type = this.constant;
 
     return endIdx;
   }

@@ -49,11 +49,11 @@ class BlockFinder {
     //   return false;
     // }
 
-    if (this.selected.variableType && this.selected.variableType !== blockDescriptor.type) {
+    if (this.selected.variableType && this.selected.variableType !== blockDescriptor.statement.type) {
       return false;
     }
 
-    if (this.selected.searchQuery && !blockDescriptor.originalStatement?.includes(this.selected.searchQuery)) {
+    if (this.selected.searchQuery && !blockDescriptor.statement.originalStatement?.includes(this.selected.searchQuery)) {
       return false;
     }
 

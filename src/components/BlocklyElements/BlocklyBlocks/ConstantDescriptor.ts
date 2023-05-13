@@ -7,7 +7,7 @@ import { StatementContext } from "../StatementContext";
 
 class ConstantDescriptor implements BlockDescriptor {
 
-  private readonly statement: MMConstant;
+  readonly statement: MMConstant;
 
   constructor(statement: MMConstant) {
     this.statement = statement;

@@ -8,6 +8,7 @@ class AxiomaticAssertion implements IMMStatement {
   originalStatement: string;
 
   context: IMMStatement[] = [];
+  type: string;
 
   constant: string;
 
@@ -19,6 +20,7 @@ class AxiomaticAssertion implements IMMStatement {
     this.label = params[0];
     this.constant = params[2]
     this.mathSymbols = params.slice(2, -1);
+    this.type = this.mathSymbols[0];
 
     return endIdx;
   }

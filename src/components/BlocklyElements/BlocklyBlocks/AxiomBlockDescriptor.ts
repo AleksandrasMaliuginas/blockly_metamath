@@ -7,7 +7,7 @@ import { AxiomBlock } from "./AxiomBlock";
 
 class AxiomBlockDescriptor implements BlockDescriptor {
 
-  private readonly statement: ScopingBlock;
+  readonly statement: ScopingBlock;
 
   constructor(statement: ScopingBlock) {
     this.statement = statement

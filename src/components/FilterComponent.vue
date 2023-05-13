@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { BlockFinder } from "./BlockFinder";
 import { Keywords } from "./DatabaseParser/MM";
 
@@ -27,10 +27,6 @@ const setMMTypes = (types: string[]) => {
 };
 
 defineExpose({ setMMTypes });
-
-onMounted(async () => {
-
-});
 
 function onSearchUpdate(event: any) {
   blockFinder.updateSearchKey(event.target.value);

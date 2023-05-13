@@ -9,6 +9,7 @@ class ScopingBlock implements IMMStatement {
   originalStatement: string;
 
   context: IMMStatement[] = [];
+  type: string;
 
   statements: IMMStatement[] = [];
 
@@ -20,6 +21,7 @@ class ScopingBlock implements IMMStatement {
     const endIndex = dbStr.indexOf(Keywords.END_OF_SCOPING_BLOCK, innerParser.endIndex);
 
     this.label = this.statements.findLast(s => s)?.label;
+    this.type = this.statements.findLast(s => s)?.mathSymbols[0];
     this.originalStatement = dbStr.slice(startIndex, endIndex).trim();
 
     return endIndex + 2;

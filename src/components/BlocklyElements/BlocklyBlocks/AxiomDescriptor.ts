@@ -6,7 +6,7 @@ import { Axiom } from "./Axiom";
 
 class AxiomDescriptor implements BlockDescriptor {
 
-  private readonly statement: AxiomaticAssertion;
+  readonly statement: AxiomaticAssertion;
 
   constructor(statement: AxiomaticAssertion) {
     this.statement = statement;

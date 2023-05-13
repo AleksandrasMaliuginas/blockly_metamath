@@ -7,7 +7,7 @@ import { StatementContext } from "../StatementContext";
 
 class VariableDescriptor implements BlockDescriptor {
 
-  private readonly statement: MMVariable;
+  readonly statement: MMVariable;
 
   constructor(statement: MMVariable) {
     this.statement = statement;

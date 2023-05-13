@@ -6,6 +6,7 @@ export interface IMMStatement {
 
   originalStatement: string;
 
+  type?: string;
   context: IMMStatement[];
 
   /**

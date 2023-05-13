@@ -1,5 +1,6 @@
 import { Block } from "blockly";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
+import { IMMStatement } from "../DatabaseParser/IMMStatement";
 
 export type ExtendedBlocklyBlock = Block & {
   init?: () => void,
@@ -13,6 +14,8 @@ export interface MMBlock {
 }
 
 export interface BlockDescriptor {
+  readonly statement: IMMStatement;
+
   blockName(): string;
   toolboxInstance(): ToolboxItemInfo;
 }

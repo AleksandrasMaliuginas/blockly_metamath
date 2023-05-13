@@ -7,7 +7,7 @@ import { StatementContext } from "../StatementContext";
 
 class FloatingHypoDescriptor implements BlockDescriptor {
 
-  private readonly statement: VariableHypothesis;
+  readonly statement: VariableHypothesis;
 
   constructor(statement: VariableHypothesis) {
     this.statement = statement;
