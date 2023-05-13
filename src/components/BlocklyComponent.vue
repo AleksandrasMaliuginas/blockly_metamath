@@ -39,9 +39,7 @@ onMounted(async () => {
   workspace.value = Blockly.inject(blocklyDiv.value, options);
 
   // Open MM file
-  const file = await fetch("demo0.mm");
-  // const file = await fetch("hol.mm");
-  const fileStr = await file.text();
+  const fileStr = await getCurrentMMDatabase();
 
   // Parse MM database file
   const databaseParser = new DatabaseParser(fileStr);
@@ -71,6 +69,16 @@ onMounted(async () => {
   // initializer.loadInitialState();
 });
 
+async function getMetamathDatabase(name: string): Promise<string> {
+  const file = await fetch(name);
+  return file.text();
+}
+
+async function getCurrentMMDatabase(): Promise<string> {
+  return await getMetamathDatabase('demo0.mm');
+  // return await getMetamathDatabase('hol.mm');
+}
+
 function workspaceToCode(): string {
   return codeGenerator.workspaceToCode(workspace.value);
 }
@@ -90,7 +98,7 @@ const cssVars = {
     
     <div class="blocklyDiv" ref="blocklyDiv"></div>
 
-    <ExecutionComponent :workspaceToCode="workspaceToCode" ref="executionComponent"></ExecutionComponent>
+    <ExecutionComponent :workspaceToCode="workspaceToCode" :getCurrentMMDatabase="getCurrentMMDatabase()" ref="executionComponent"></ExecutionComponent>
   </div>
 </template>
 
