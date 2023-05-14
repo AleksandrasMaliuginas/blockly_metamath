@@ -20,9 +20,13 @@ class ScopingBlock implements IMMStatement {
     this.statements = innerParser.parse(startIndex);
     const endIndex = dbStr.indexOf(Keywords.END_OF_SCOPING_BLOCK, innerParser.endIndex);
 
-    this.label = this.statements.findLast(s => s)?.label;
-    this.type = this.statements.findLast(s => s)?.mathSymbols[0];
-    this.originalStatement = dbStr.slice(startIndex, endIndex).trim();
+    const last = this.statements[this.statements.length - 1];
+    // TODO: Fix Scoping block nesting
+    if (last.mathSymbols) {
+      this.label = last.label;
+      this.type = last.mathSymbols[0]; 
+      this.originalStatement = dbStr.slice(startIndex, endIndex).trim();
+    }
 
     return endIndex + 2;
   }

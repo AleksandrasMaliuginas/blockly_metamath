@@ -3,14 +3,14 @@ import { BlockDescriptor, ExtendedBlocklyBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { ScopingBlock } from "../../DatabaseParser/MMStatements/ScopingBlock";
 import { StatementContext } from "../StatementContext";
-import { AxiomBlock } from "./AxiomBlock";
+import { BlockAxiom } from "./BlockAxiom";
 
-class AxiomBlockDescriptor implements BlockDescriptor {
+class BlockAxiomDescriptor implements BlockDescriptor {
 
   readonly statement: ScopingBlock;
 
   constructor(statement: ScopingBlock) {
-    this.statement = statement
+    this.statement = statement;
   }
 
   blockName(): string {
@@ -27,14 +27,14 @@ class AxiomBlockDescriptor implements BlockDescriptor {
   public static create(statement: ScopingBlock, context: StatementContext): ExtendedBlocklyBlock {
     const blocklyBlock = {
       init: function () {
-        this.mmBlock = new AxiomBlock(this, statement, context);
+        this.mmBlock = new BlockAxiom(this, statement, context);
         this.mmBlock?.init();
       },
     } as ExtendedBlocklyBlock;
-    blocklyBlock.descriptor = new AxiomBlockDescriptor(statement);
+    blocklyBlock.descriptor = new BlockAxiomDescriptor(statement);
 
     return blocklyBlock;
   }
 }
 
-export { AxiomBlockDescriptor }
+export { BlockAxiomDescriptor }

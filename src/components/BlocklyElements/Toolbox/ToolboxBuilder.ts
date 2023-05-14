@@ -5,9 +5,10 @@ import { SegmentManager } from "../BlocklyBlocks/SegmentManager";
 import { BlockFinder } from "../../BlockFinder";
 import { FloatingHypoDescriptor } from "../BlocklyBlocks/FloatingHypoDescriptor";
 import { AxiomDescriptor } from "../BlocklyBlocks/AxiomDescriptor";
-import { AxiomBlockDescriptor } from "../BlocklyBlocks/AxiomBlockDescriptor";
 import { ConstantDescriptor } from "../BlocklyBlocks/ConstantDescriptor";
 import { VariableDescriptor } from "../BlocklyBlocks/VariableDescriptor";
+import { BlockAxiomDescriptor } from "../BlocklyBlocks/BlockAxiomDescriptor";
+import { BlockProofDescriptor } from "../BlocklyBlocks/BlockProofDescriptor";
 
 class ToolboxBuilder {
 
@@ -38,7 +39,8 @@ class ToolboxBuilder {
     const categories = new Map([
       ['MM_FLOATING_HYPOS', this.getFloatingHypoBlocks],
       ['MM_AXIOMS', this.getAxiomBlocks],
-      ['MM_BLOCKS', this.getBlockAxiomBlocks],
+      ['MM_BLOCK_AXIOMS', this.getBlockAxiomBlocks],
+      ['MM_BLOCK_PROOFS', this.getBlockProofBlocks],
       ['MM_CONSTANTS', this.getConstantBlocks],
       ['MM_VARIABLES', this.getVariableBlocks],
       ['SEGMENTS', this.getSegments],
@@ -53,7 +55,8 @@ class ToolboxBuilder {
 
   private getFloatingHypoBlocks = () => this.getBlocksByObjectType(FloatingHypoDescriptor);
   private getAxiomBlocks        = () => this.getBlocksByObjectType(AxiomDescriptor);
-  private getBlockAxiomBlocks   = () => this.getBlocksByObjectType(AxiomBlockDescriptor);
+  private getBlockAxiomBlocks   = () => this.getBlocksByObjectType(BlockAxiomDescriptor);
+  private getBlockProofBlocks   = () => this.getBlocksByObjectType(BlockProofDescriptor);
   private getConstantBlocks     = () => this.getBlocksByObjectType(ConstantDescriptor);
   private getVariableBlocks     = () => this.getBlocksByObjectType(VariableDescriptor);
   private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback(workspace);

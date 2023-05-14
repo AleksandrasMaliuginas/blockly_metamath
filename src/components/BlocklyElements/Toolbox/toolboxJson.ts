@@ -9,13 +9,11 @@ export const toolboxJson : any = {
     {
       "kind": "category",
       "name": "Constants",
-      "colour": 160,
       "custom": "MM_CONSTANTS"
     },
     {
       "kind": "category",
       "name": "Variables",
-      "colour": 330,
       "custom": "MM_VARIABLES"
     },
     {
@@ -24,25 +22,26 @@ export const toolboxJson : any = {
     {
       "kind": "category",
       "name": "Floating-point Hypo",
-      "colour": 230,
       "custom": "MM_FLOATING_HYPOS"
     },
     {
       "kind": "category",
       "name": "Axioms",
-      "colour": 210,
       "custom": "MM_AXIOMS"
     },
     {
       "kind": "category",
-      "name": "Blocks",
-      "colour": 60,
-      "custom": "MM_BLOCKS"
+      "name": "Axiom blocks",
+      "custom": "MM_BLOCK_AXIOMS"
+    },
+    {
+      "kind": "category",
+      "name": "Prooven axioms",
+      "custom": "MM_BLOCK_PROOFS"
     },
     {
       "kind": "category",
       "name": "Proofs",
-      "colour": 20,
       "contents": [
         {
           "kind": "block",
@@ -56,7 +55,6 @@ export const toolboxJson : any = {
     {
       "kind": "category",
       "name": "Segments",
-      "colour": 120,
       "custom": "SEGMENTS"
     },
   ],

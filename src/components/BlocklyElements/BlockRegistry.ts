@@ -11,11 +11,12 @@ import { Constant } from "../DatabaseParser/MMStatements/Constant";
 import { StatementContext } from "./StatementContext";
 import { FloatingHypoDescriptor } from "./BlocklyBlocks/FloatingHypoDescriptor";
 import { AxiomDescriptor } from "./BlocklyBlocks/AxiomDescriptor";
-import { AxiomBlockDescriptor } from "./BlocklyBlocks/AxiomBlockDescriptor";
 import { ProvableAssertion } from "../DatabaseParser/MMStatements/ProvableAssertion";
 import { ConstantDescriptor } from "./BlocklyBlocks/ConstantDescriptor";
 import { VariableDescriptor } from "./BlocklyBlocks/VariableDescriptor";
 import { ProofDescriptor } from "./BlocklyBlocks/ProofDescriptor";
+import { BlockAxiomDescriptor } from "./BlocklyBlocks/BlockAxiomDescriptor";
+import { BlockProofDescriptor } from "./BlocklyBlocks/BlockProofDescriptor";
 
 interface IBlockRegistry {
   registerMMStatements(mm_statement_list: IMMStatement[]): void
@@ -54,9 +55,14 @@ class BlockRegistry implements IBlockRegistry {
       return;
     }
 
-    const blocklyBlock = this.createBlock(mmStatement, statementContext);
+    // TODO: Fix Scoping block nesting
+    try {
+      const blocklyBlock = this.createBlock(mmStatement, statementContext);
 
-    this.registerBlock(blocklyBlock);
+      this.registerBlock(blocklyBlock);
+    } catch (e) {
+      // console.error(e);
+    }
   }
 
   private registerBlock(block: ExtendedBlocklyBlock) {
@@ -98,7 +104,18 @@ class BlockRegistry implements IBlockRegistry {
     }
 
     if (statement instanceof ScopingBlock) {
-      return AxiomBlockDescriptor.create(statement, context);
+      const lastIndex = statement.statements.length - 1;
+      const lastInnerStatement = statement.statements[lastIndex];
+
+      if (lastInnerStatement instanceof AxiomaticAssertion) {
+        return BlockAxiomDescriptor.create(statement, context);
+      }
+
+      if (lastInnerStatement instanceof ProvableAssertion) {
+        // console.log("BLOCK PROOF")
+        // console.log(BlockProofDescriptor.create(statement, context))
+        return BlockProofDescriptor.create(statement, context);
+      }
     }
 
     if (statement instanceof Constant) {

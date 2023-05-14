@@ -8,7 +8,7 @@ import { MultiLineField } from "../../BlockRenderer/MultiLineFieldLabel";
 import { ProvableAssertion } from "../../DatabaseParser/MMStatements/ProvableAssertion";
 import { StatementContext } from "../StatementContext";
 
-class AxiomBlock implements MMBlock {
+class BlockAxiom implements MMBlock {
 
   private readonly block: Block;
 
@@ -71,7 +71,7 @@ class AxiomBlock implements MMBlock {
   private innerBlockToCode(block: ExtendedBlocklyBlock): string {
     const code = block.mmBlock?.toCode();
 
-    if (block.nextConnection.isConnected()) {
+    if (block.nextConnection?.isConnected()) {
       const nextBlock = block.nextConnection.targetBlock() as ExtendedBlocklyBlock;
       return code + ' ' + this.innerBlockToCode(nextBlock);
     }
@@ -113,4 +113,4 @@ const jsonBlockTemplate = {
   "nextStatement": null,
 };
 
-export { AxiomBlock }
+export { BlockAxiom }
