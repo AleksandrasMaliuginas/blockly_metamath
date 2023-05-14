@@ -37,6 +37,10 @@ class MultiLineFieldLabel extends FieldLabel {
       const tspanElement = Blockly.utils.dom.createSvgElement(Blockly.utils.Svg.TSPAN, { 'dy': dy, 'x': 0 }, this.textElement_);
       dy = this.getConstants()!.FIELD_TEXT_HEIGHT + 5;
 
+      if (line.length > 50) {
+        line = line.slice(0, 50) + "...";
+      }
+
       tspanElement.appendChild(document.createTextNode(line));
     });
   };
@@ -52,6 +56,10 @@ class MultiLineFieldLabel extends FieldLabel {
     let contentWidth = 0;
     if (this.textElement_) {
       const lineLengths: number[] = lines.map(line => {
+        if (line.length > 50) {
+          line = line.slice(0, 50) + "...";
+        }
+
         const lineElement = Blockly.utils.dom.createSvgElement(Blockly.utils.Svg.TEXT, {}, null);
         lineElement.textContent = line;
 
