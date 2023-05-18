@@ -59,7 +59,7 @@ class ToolboxBuilder {
   private getBlockProofBlocks   = () => this.getBlocksByObjectType(BlockProofDescriptor);
   private getConstantBlocks     = () => this.getBlocksByObjectType(ConstantDescriptor);
   private getVariableBlocks     = () => this.getBlocksByObjectType(VariableDescriptor);
-  private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback(workspace);
+  private getSegments           = (workspace : WorkspaceSvg) => this.segmentManager.toolboxCallback();
 
   private getBlocksByObjectType = (classtype: any) => {
     return this.blockList.reduce((arr, block: BlockDescriptor) => {

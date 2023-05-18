@@ -49,26 +49,21 @@ onMounted(async () => {
   console.table(parsedStatements);
 
   // Create block filter
-  const types = new Set(parsedStatements.map(statement => statement.constant));
+  const types = new Set(parsedStatements.map((statement: any) => statement.constant));
   types.delete(undefined);
   mmBlockFinder.setMMTypes(types);
   filterComponent.value.setMMTypes(Array.from(types));
 
   // Create blockly blocks
-  const segmentManager = new SegmentManager(workspace.value);
+  const segmentManager = new SegmentManager(workspace.value, codeGenerator);
   const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager, mmBlockFinder);
-  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, segmentManager, codeGenerator);
+  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, codeGenerator);
   blockRegistry.registerMMStatements(parsedStatements);
 
   // Create Blockly toolbox
   // TODO: move to toolbox builder. toolboxBuilder.updateToolbox()
   workspace.value.updateToolbox(toolboxBuilder.getToolboxJson());
 
-  
-
-  // For DEMO purposes
-  // const initializer = new WorkspaceInitializer(workspace.value);
-  // initializer.loadInitialState();
 });
 
 async function getMetamathDatabase(name: string): Promise<string> {

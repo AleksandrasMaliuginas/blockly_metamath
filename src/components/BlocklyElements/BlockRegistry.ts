@@ -25,15 +25,12 @@ interface IBlockRegistry {
 class BlockRegistry implements IBlockRegistry {
 
   private readonly toolboxBuilder: ToolboxBuilder;
-  private readonly segmentManager: SegmentManager;
   private readonly codeGenerator: any;
   private mm_statements: IMMStatement[] = [];
 
-  constructor(toolboxBuilder: ToolboxBuilder, segmentManager: SegmentManager, codeGenerator: Generator) {
+  constructor(toolboxBuilder: ToolboxBuilder, codeGenerator: Generator) {
     this.toolboxBuilder = toolboxBuilder;
-    this.segmentManager = segmentManager;
     this.codeGenerator = codeGenerator as any;
-    this.registerSegmentBlocks();
 
     this.registerAdditionalBlocks();
   }
@@ -87,13 +84,6 @@ class BlockRegistry implements IBlockRegistry {
     this.registerBlock(ProofDescriptor.create());
   }
 
-  private registerSegmentBlocks(): void {
-    Blocks[BlockTypes.SegmentDef] = this.segmentManager.segmentDefinitionBlock();
-    Blocks[BlockTypes.SegmentRef] = this.segmentManager.segmentReferenceBlock();
-    this.codeGenerator[BlockTypes.SegmentDef] = () => { throw 'No implementation provided'; };
-    this.codeGenerator[BlockTypes.SegmentRef] = () => { throw 'No implementation provided'; };
-  }
-
   private createBlock(statement: IMMStatement, context: StatementContext): ExtendedBlocklyBlock {
     if (statement instanceof VariableHypothesis) {
       return FloatingHypoDescriptor.create(statement, context);
@@ -112,8 +102,6 @@ class BlockRegistry implements IBlockRegistry {
       }
 
       if (lastInnerStatement instanceof ProvableAssertion) {
-        // console.log("BLOCK PROOF")
-        // console.log(BlockProofDescriptor.create(statement, context))
         return BlockProofDescriptor.create(statement, context);
       }
     }

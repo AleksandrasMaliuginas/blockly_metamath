@@ -1,33 +1,43 @@
 
-import { Block } from "blockly";
-import { BlockTypes, BlockDescriptor } from "../IBlocklyBlock";
+import { Block, Events, WorkspaceSvg } from "blockly";
+import { BlockTypes, ExtendedBlocklyBlock, MMBlock } from "../IBlocklyBlock";
 import { ToolboxItemInfo } from "blockly/core/utils/toolbox";
+import { BODY_INPUT, NAME_FIELD } from "./SegmentDefinition";
 
-class SegmentReference implements BlockDescriptor {
+class SegmentReference implements MMBlock {
 
-  constructor() { }
+  private readonly block: Block;
+  private readonly workspace: WorkspaceSvg;
 
-  initializer(): any {
-    const thisObject = this;
-    return {
-      init: function () {
-        thisObject.blockInit(this);
-      }
-    };
+  constructor(block: ExtendedBlocklyBlock, workspace: WorkspaceSvg) {
+    this.block = block;
+    this.workspace = workspace;
   }
 
-  toolboxInstance(): ToolboxItemInfo {
-    return {
-      "kind": "block",
-      "type": BlockTypes.SegmentRef
-    };
+  init(): void {
+    this.block.jsonInit(jsonBlockTemplate);
   }
 
-  blockToCode(): string {
+  toCode(): string {
+    const referenceName = this.block.getFieldValue(NAME_FIELD);
+    const definition = this.workspace.getBlocksByType(BlockTypes.SegmentDef, false)
+      .find(def => def.getFieldValue(NAME_FIELD) === referenceName) as ExtendedBlocklyBlock;
+
+    if (!definition) {
+      throw `No definition found for Segment reference block: ${referenceName}.`;
+    }
+
+    const definitionBody = definition.getInput(BODY_INPUT);
+    const targetBlock = definitionBody?.connection?.targetConnection?.getSourceBlock() as ExtendedBlocklyBlock;
+
+    if (targetBlock && targetBlock.mmBlock) {
+      return targetBlock.mmBlock.toCode();
+    }
+
     return "";
   }
 
-  static toolboxInstance(name : string): ToolboxItemInfo {
+  public static toolboxInstance(name : string): ToolboxItemInfo {
     return {
       'kind': 'block',
       'type': BlockTypes.SegmentRef,
@@ -35,10 +45,6 @@ class SegmentReference implements BlockDescriptor {
         'NAME': name,
       }
     }
-  }
-
-  private blockInit(block: Block): void {
-    block.jsonInit(jsonBlockTemplate);
   }
 }
 
@@ -53,9 +59,12 @@ const jsonBlockTemplate = {
     }
   ],
   "output": null,
-  "colour": 120,
+  "colour": 270,
   "tooltip": "",
-  "helpUrl": ""
+  "helpUrl": "",
+
+  "previousStatement": null,
+  "nextStatement": null,
 };
 
 export { SegmentReference }
