@@ -14,7 +14,6 @@ import ExecutionComponent from "./Execution/ExecutionComponent.vue";
 import WorkspaceLoadComponent from "./WorkspaceLoadComponent.vue";
 
 const props = defineProps(["options"]);
-const blocklyToolbox = ref();
 const blocklyDiv = ref();
 const filterComponent = ref();
 const executionComponent = ref();
@@ -23,7 +22,7 @@ const workspace = shallowRef();
 
 const codeGenerator = new Blockly.Generator('metamath');
 const mmBlockFinder = new BlockFinder();
-
+let currentDatabase: string;
 
 defineExpose({ workspace, codeGenerator });
 
@@ -34,17 +33,17 @@ onMounted(async () => {
   // Setup blockly workspace
   const options = props.options || {};
 
-  if (!options.toolbox) {
-    options.toolbox = blocklyToolbox.value;
-  }
   options.renderer = RENDERER_NAME;
   workspace.value = Blockly.inject(blocklyDiv.value, options);
 
-  // Open MM file
-  const fileStr = await getCurrentMMDatabase();
+  await loadDefaultDatabase();
+});
+
+function loadWorkspace(mmDatabaseString: string) {
+  currentDatabase = mmDatabaseString;
 
   // Parse MM database file
-  const databaseParser = new DatabaseParser(fileStr);
+  const databaseParser = new DatabaseParser(mmDatabaseString);
   const parsedStatements = databaseParser.parse();
   console.table(parsedStatements);
 
@@ -56,23 +55,19 @@ onMounted(async () => {
 
   // Create blockly blocks
   const segmentManager = new SegmentManager(workspace.value, codeGenerator);
-  const toolboxBuilder : ToolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager, mmBlockFinder);
-  const blockRegistry : BlockRegistry = new BlockRegistry(toolboxBuilder, codeGenerator);
+  const toolboxBuilder = new ToolboxBuilder(workspace.value, segmentManager, mmBlockFinder);
+  const blockRegistry = new BlockRegistry(toolboxBuilder, codeGenerator);
   blockRegistry.registerMMStatements(parsedStatements);
 
   // Create Blockly toolbox
-  // TODO: move to toolbox builder. toolboxBuilder.updateToolbox()
   workspace.value.updateToolbox(toolboxBuilder.getToolboxJson());
-
-});
-
-async function getMetamathDatabase(name: string): Promise<string> {
-  const file = await fetch(name);
-  return file.text();
 }
 
-async function getCurrentMMDatabase(): Promise<string> {
-  return await getMetamathDatabase('demo0.mm');
+async function loadDefaultDatabase(): Promise<void> {
+  const file = await fetch('demo0.mm');
+  const databaseString = await file.text();
+
+  loadWorkspace(databaseString);
 }
 
 function workspaceToCode(): string {
@@ -83,6 +78,14 @@ function getWorkspace(): WorkspaceSvg {
   return workspace.value;
 }
 
+function getCurrentDatabase() {
+  return currentDatabase;
+}
+
+const mm_database_list: string[] = [
+  'demo0.mm', 'hol.mm', 'peano.mm'//, 'nf.mm'
+];
+
 const cssVars = {
   headerRow: '2.3em',
   executionComponent: '200px'
@@ -90,36 +93,44 @@ const cssVars = {
 </script>
 
 <template>
-  <div>
-    <section class="header">
-      <FilterComponent :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
+  <main>
 
-      <WorkspaceLoadComponent :getWorkspace="getWorkspace" ref="loaderComponent"></WorkspaceLoadComponent>
-    </section>
-    
+    <header>
+      <section class="filter-component">
+        <FilterComponent :blockFinder="mmBlockFinder" ref="filterComponent"></FilterComponent>
+      </section>
+
+      <section>
+        <WorkspaceLoadComponent 
+          :getWorkspace="getWorkspace" 
+          :metamathDatabaseList="mm_database_list"
+          :loadMetamathDatabase="loadWorkspace" 
+          ref="loaderComponent"></WorkspaceLoadComponent>
+      </section>
+    </header>
+
     <div class="blocklyDiv" ref="blocklyDiv"></div>
 
-    <ExecutionComponent :workspaceToCode="workspaceToCode" :getCurrentMMDatabase="getCurrentMMDatabase()" ref="executionComponent"></ExecutionComponent>
-  </div>
+    <ExecutionComponent :workspaceToCode="workspaceToCode" :getCurrentDatabase="getCurrentDatabase" ref="executionComponent"></ExecutionComponent>
+
+  </main>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-section.header {
+header {
   height: v-bind('cssVars.headerRow');
+  padding: 0 1em;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content:space-between;
+  align-items: center;
 }
 
-FilterComponent {
-  display: inline-block;
-  width: 70%;
-  min-width: none;
-}
-
-WorkspaceLoadComponent {
-  display: inline-block;
-  width: 30%;
-  min-width: none;
+.filter-component {
+  flex-grow: 2;
 }
 
 .blocklyDiv {
@@ -128,7 +139,5 @@ WorkspaceLoadComponent {
   text-align: left;
 }
 
-ExecutionComponent {
-  height: v-bind('cssVars.executionComponent');
-}
+
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import Blockly from "blockly";
+import Blockly, { WorkspaceSvg } from "blockly";
 import { ref } from "vue";
 import { State } from "blockly/core/serialization/blocks";
 
@@ -8,11 +8,20 @@ const props = defineProps({
   getWorkspace: {
     type: Function,
     required: true
-  }
+  },
+  metamathDatabaseList: {
+    type: Array<string>,
+    required: true
+  },
+  loadMetamathDatabase: {
+    type: Function,
+    required: true
+  },
 });
 
 const fileInput = ref();
 const serializer = new Blockly.serialization.blocks.BlockSerializer();
+
 
 function saveWorkspace() {
   const state = serializer.save(props.getWorkspace());
@@ -25,11 +34,11 @@ function saveWorkspace() {
   dummyDownloadLink.remove();
 }
 
-function onPickFile () {
+function onPickFile() {
   fileInput.value.click();
 }
 
-function onFilePicked (event: any) {
+function onFilePicked(event: any) {
   const file = event.target.files[0];
   const fileReader = new FileReader();
 
@@ -45,31 +54,75 @@ function loadWorkspaceState(workspaceState: { languageVersion: number; blocks: S
   serializer.load(workspaceState, props.getWorkspace());
 }
 
+function onMMDatabaseChanged(event: any) {
+
+  if (!ensureEmptyWorkspace()) return;
+
+  getMetamathDatabase(event.target.value).then(
+    databaseString => props.loadMetamathDatabase(databaseString)
+  ).catch( () => {
+    window.alert("Something went wrong while loading database.")
+  });
+}
+
+async function getMetamathDatabase(name: string): Promise<string> {
+  const file = await fetch(name);
+  return file.text();
+}
+
+function ensureEmptyWorkspace(): boolean {
+  if (props.getWorkspace().getAllBlocks(false).length === 0) {
+    return true;
+  }
+
+  return window.confirm("Are you sure you what to switch database without save you progress?");
+}
+
+
+function onMounted(arg0: () => void) {
+throw new Error("Function not implemented.");
+}
 </script>
 
 <template>
-  <div>
-    <img v-on:click="saveWorkspace" src="images/save.png" class="button" alt="Save workspace as JSON" title="Save workspace as JSON">
-    <img v-on:click="onPickFile" src="images/download.png" class="button" alt="Load workspace form JSON" title="Load workspace form JSON">
+  <div class="main">
+    
+    <label for="mm-database">MM database:</label>
+    <select id="mm-database" @input="onMMDatabaseChanged">
+      <option v-for="option in props.metamathDatabaseList" :value="option">
+        {{ option }}
+      </option>
+    </select>
+
+    <img v-on:click="saveWorkspace" src="images/save.png" class="button" alt="Save workspace as JSON" title="Save workspace as JSON" />
+    <img v-on:click="onPickFile" src="images/download.png" class="button" alt="Load workspace form JSON" title="Load workspace form JSON" />
     <input
       type="file"
       style="display: none"
       ref="fileInput"
       accept=".json"
       @change="onFilePicked"/>
+
   </div>
 </template>
 
 <style scoped>
-div {
-  float: right;
+div.main {
+  display: flex;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .button {
   height: 20px;
   padding: 7px 10px;
-  margin: 1px 5px;
-  vertical-align: middle;
   cursor: pointer;
+}
+
+#mm-database {
+  margin: 0 7px;
 }
 </style>

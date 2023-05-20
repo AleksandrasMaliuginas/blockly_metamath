@@ -8,8 +8,8 @@ const props = defineProps({
     type: Function,
     required: true
   },
-  getCurrentMMDatabase: {
-    type: Promise<string>,
+  getCurrentDatabase: {
+    type: Function,
     required: true
   },
 });
@@ -21,13 +21,11 @@ const showCode = () => {
   metamathCode.value = props.workspaceToCode();
 }
 
-const runMetamathValidator = async () => {
+const runMetamathValidator = () => {
   showCode();
 
-  props.getCurrentMMDatabase.then(fileStr => {
-    const fileStrToVerify = fileStr + props.workspaceToCode();
-    verifierOutput.value = verifyProof(fileStrToVerify);
-  });
+  const databaseToValidate = props.getCurrentDatabase() + props.workspaceToCode();
+  verifierOutput.value = verifyProof(databaseToValidate);
 }
 
 
