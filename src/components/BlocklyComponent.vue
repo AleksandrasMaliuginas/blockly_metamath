@@ -73,7 +73,6 @@ async function getMetamathDatabase(name: string): Promise<string> {
 
 async function getCurrentMMDatabase(): Promise<string> {
   return await getMetamathDatabase('demo0.mm');
-  // return await getMetamathDatabase('hol.mm');
 }
 
 function workspaceToCode(): string {

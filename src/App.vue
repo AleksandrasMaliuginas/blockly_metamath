@@ -16,7 +16,6 @@ import { ref } from "vue";
 import BlocklyComponent from "./components/BlocklyComponent.vue";
 
 const blocklyComponent = ref();
-const code = ref();
 const options = {
   grid: {
     spacing: 25,
@@ -64,8 +63,6 @@ const options = {
           </category>
         </xml>`,
 };
-
-// const showCode = () => (code.value = blocklyComponent.value.codeGenerator.workspaceToCode(blocklyComponent.value.workspace));
 
 </script>
 

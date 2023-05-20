@@ -54,9 +54,10 @@ class StatementContext {
   public getStatementContext() {
 
     if (this.statement.keyword === Keywords.START_OF_SCOPING_BLOCK) {
-      return this.statement.originalStatement;
+      return "Type: " + this.statement.type + END_LINE +
+        "Statement: " + END_LINE + this.statement.originalStatement;
     }
-    
+
     if (this.statement.keyword !== Keywords.VARIABLE_HYPOTHESIS) {
       const lines: string[] = [];
       const requiredInputs: Map<string, string> = new Map();
@@ -66,12 +67,16 @@ class StatementContext {
         const variableHypo = this.getFloatingHypothesis(symbol);
 
         if (definition?.keyword === Keywords.VARIABLE && variableHypo) {
-          requiredInputs.set(symbol, variableHypo.originalStatement);
-          lines.push(symbol + ': ' + variableHypo.originalStatement);
+          if (!requiredInputs.has(symbol)) {
+            requiredInputs.set(symbol, variableHypo.originalStatement);
+
+            lines.push(symbol + ': ' + variableHypo.originalStatement);
+          }
         }
       });
 
-      return "Statement: " + END_LINE + this.statement.keyword + " " + this.statement.mathSymbols.join(' ') + END_LINE +
+      return "Type: " + this.statement.type + END_LINE +
+        "Statement: " + END_LINE + this.statement.keyword + " " + this.statement.mathSymbols.join(' ') + END_LINE +
         "Inputs: " + END_LINE + lines.join(END_LINE);
     }
 
