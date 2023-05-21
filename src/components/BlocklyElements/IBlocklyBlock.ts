@@ -28,6 +28,7 @@ export const enum BlockTypes {
   // EssentialHypo = 'MMEssentialHypo',
   Block = 'MMBlock',
   Proof = 'MMProof',
+  Comment = 'MMComment',
 
   /**
    * Dummy token names to group and reuse labels used in proof.

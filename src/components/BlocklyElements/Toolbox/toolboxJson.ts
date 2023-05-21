@@ -40,17 +40,21 @@ export const toolboxJson : any = {
       "custom": "MM_BLOCK_PROOFS"
     },
     {
+      "kind": "sep",
+    },
+    {
       "kind": "category",
       "name": "Proofs",
       "contents": [
         {
           "kind": "block",
           "type": BlockTypes.Proof
-        }
+        },
+        {
+          "kind": "block",
+          "type": BlockTypes.Comment
+        },
       ]
-    },
-    {
-      "kind": "sep",
     },
     {
       "kind": "category",

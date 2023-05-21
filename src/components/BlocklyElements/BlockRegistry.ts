@@ -17,6 +17,7 @@ import { VariableDescriptor } from "./BlocklyBlocks/VariableDescriptor";
 import { ProofDescriptor } from "./BlocklyBlocks/ProofDescriptor";
 import { BlockAxiomDescriptor } from "./BlocklyBlocks/BlockAxiomDescriptor";
 import { BlockProofDescriptor } from "./BlocklyBlocks/BlockProofDescriptor";
+import { Comment } from "./BlocklyBlocks/Comment";
 
 interface IBlockRegistry {
   registerMMStatements(mm_statement_list: IMMStatement[]): void
@@ -82,6 +83,12 @@ class BlockRegistry implements IBlockRegistry {
 
   private registerAdditionalBlocks() {
     this.registerBlock(ProofDescriptor.create());
+
+    // Register Comment block and code generator
+    Blocks[BlockTypes.Comment] = Comment.create();
+    this.codeGenerator[BlockTypes.Comment] = (block: ExtendedBlocklyBlock) => {
+      return block.mmBlock?.toCode();
+    };
   }
 
   private createBlock(statement: IMMStatement, context: StatementContext): ExtendedBlocklyBlock {
