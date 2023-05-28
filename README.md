@@ -1,14 +1,14 @@
-# About
+# Metamath proof assistant
 
-   Proof assistant for Metamath language using Blockly library.
+   Proof assistant for Metamath language utilizing Blockly library for building proofs.
    
    [Demo proof construced from blocks](public/demo0.th1.json) can be imported and tested in the tool.
 
 
 ## Start application
 
-Install correct version of Node by running following command.
-It will take Node version specified in .nvmrc file.
+Install correct version of NodeJS by running following command.
+It will take Node version specified in [.nvmrc file](.nvmrc).
    
       nvm use
 
